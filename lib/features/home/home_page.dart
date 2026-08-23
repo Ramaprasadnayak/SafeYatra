@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
         child: Column(
           children: [
             SizedBox(height: 10),

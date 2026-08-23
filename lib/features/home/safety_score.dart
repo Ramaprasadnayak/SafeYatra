@@ -14,7 +14,7 @@ class _SafetyScoreState extends State<SafetyScore> {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: [
             Row(
