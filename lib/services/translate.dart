@@ -1,19 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TranslationWebSocket {
   WebSocket? _socket;
-  Future<void> connect({required String source,required String target}) async {
-    _socket = await WebSocket.connect('ws://10.0.2.2:8000/translate/');
-
+  Future<void> connect({
+    required String source,
+    required String target,
+    required Function(String) onTranslation,
+  }) async {
+    final apiUrl = dotenv.env["apiUrl"]!;
+    _socket = await WebSocket.connect('ws://$apiUrl/translate/');
     _socket!.add(jsonEncode({
       'source': source,
       'target': target,
     }));
-    // Continuously listen for translations
     _socket!.listen(
       (data) {
-        print('Translated: $data');
+        onTranslation(data.toString());
       },
       onError: (error) {
         print('WebSocket error: $error');
@@ -24,11 +28,11 @@ class TranslationWebSocket {
     );
   }
   void sendText(String text) {
-    if (_socket != null) {
+    if (_socket != null &&
+        _socket!.readyState == WebSocket.open) {
       _socket!.add(text);
     }
   }
-
   void disconnect() {
     _socket?.close();
     _socket = null;

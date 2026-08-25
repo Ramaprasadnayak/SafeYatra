@@ -1,8 +1,12 @@
 const List<String> languages=[
-  "English",
-  "Hindi",
-  "Kannnada",
-  "Tamil",
-  "Telugu",
-  "Malayam"
+   "Kannada",
+    "English",
+    "Telugu",
+    "Hindi",
+    "Punjabi",
+    "Gujarathi",
+    "Malayalam",
+    "Bengali",
+    "Tamil",
+    "Marathi"
 ];
