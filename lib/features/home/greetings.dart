@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Greetings extends StatefulWidget {
-  final String username;
+  final String? username;
   const Greetings({
     super.key,
     required this.username

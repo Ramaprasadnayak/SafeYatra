@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class UserLocation extends StatefulWidget {
-  final String city,district,state;
+  final String? nation,city,district,state;
   const UserLocation({
     super.key,
     required this.city,
     required this.state,
-    required this.district
+    required this.district,
+    required this.nation
   });
 
   @override
@@ -55,14 +56,14 @@ class _UserLocationState extends State<UserLocation> {
                       ),
                     ),
                     Text(
-                      widget.city,
+                      widget.city ?? "Your city",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
                     ),
                     Text(
-                      widget.district,
+                      widget.district ?? "Your district",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.white60,
                         fontSize: 13,
@@ -77,7 +78,7 @@ class _UserLocationState extends State<UserLocation> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          "${widget.state}, India",
+                          "${widget.state}, ${widget.nation}",
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: Colors.white60, fontSize: 13),
                         ),

@@ -1,40 +1,59 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+Future<String?> translate(
+  BuildContext context,
+  String source,
+  String target,
+  String mytext,
+) async {
+  try {
+    String apiUrl = dotenv.env["apiUrl"]!;
 
-class TranslationWebSocket {
-  WebSocket? _socket;
-  Future<void> connect({
-    required String source,
-    required String target,
-    required Function(String) onTranslation,
-  }) async {
-    final apiUrl = dotenv.env["apiUrl"]!;
-    _socket = await WebSocket.connect('ws://$apiUrl/translate/');
-    _socket!.add(jsonEncode({
-      'source': source,
-      'target': target,
-    }));
-    _socket!.listen(
-      (data) {
-        onTranslation(data.toString());
+    final response = await http.post(
+      Uri.parse("http://$apiUrl/translate/"),
+      headers: {
+        "Content-Type": "application/json",
       },
-      onError: (error) {
-        print('WebSocket error: $error');
-      },
-      onDone: () {
-        print('WebSocket disconnected');
-      },
+      body: jsonEncode({
+        "source": source,
+        "target": target,
+        "text": mytext,
+      }),
     );
-  }
-  void sendText(String text) {
-    if (_socket != null &&
-        _socket!.readyState == WebSocket.open) {
-      _socket!.add(text);
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 &&
+        data["message"] == "Translation Successful") {
+      return data["translated_text"];
     }
-  }
-  void disconnect() {
-    _socket?.close();
-    _socket = null;
+
+    if (!context.mounted) return null;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          data["detail"] ?? data["message"] ?? "Translation Failed",
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+
+    return null;
+  } catch (e) {
+    if (!context.mounted) return null;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error: $e"),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+
+    return null;
   }
 }
