@@ -84,8 +84,8 @@ The Flutter app stays a lightweight client — it sends the user's GPS-resolved 
 
 ```bash
 # Clone the repository
-git clone https://github.com/Ramaprasadnayak/AI-based-Tourist-Safety-Monitoring-App.git
-cd AI-based-Tourist-Safety-Monitoring-App
+git clone https://github.com/Ramaprasadnayak/SafeYatra.git
+cd SafeYatra
 
 # Install dependencies
 flutter pub get
