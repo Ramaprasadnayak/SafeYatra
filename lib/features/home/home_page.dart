@@ -14,34 +14,54 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? usrname = "Ramprasad";
-  String? usrstate = "";
-  String? usrcity = "";
-  String? usrdistrict = "";
-  String? usrnation = "";
+  final Geocoding geocoding = Geocoding();
+  String? usrname = "Dear User";
+  String? usrstate = "your state";
+  String? usrcity = "your city";
+  String? usrdistrict = "your district";
+  String? usrnation = "your nation";
   double usrscore = 0;
-  
+
   Future<void> getLocationDetails() async {
-    Position position = await getCurrentPosition();
-    List<Placemark> places = await placemarkFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
-    if (places.isEmpty) {
-      print("No location information found");
-      return;
+    try {
+      Position position = await getCurrentPosition();
+
+      print('Latitude: ${position.latitude}');
+      print('Longitude: ${position.longitude}');
+
+      List<Placemark> places = await geocoding.placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (places.isEmpty) {
+        print("No location information found");
+        return;
+      }
+      if(!mounted)return;
+      String? district = await getDistrict(
+        context,
+        position.latitude,
+        position.longitude,
+      );
+
+      if (!mounted) return;
+
+      Placemark place = places.first;
+
+      setState(() {
+        usrcity = place.locality ?? '';
+        usrstate = place.administrativeArea ?? '';
+        usrnation = place.country ?? '';
+        usrdistrict = district ?? '';
+      });
+
+      print('City: $usrcity');
+      print('District: $usrdistrict');
+      print('State: $usrstate');
+      print('Country: $usrnation');
+    } catch (e) {
+      print('Location error: $e');
     }
-    Placemark place = places.first;
-    setState(() {
-      usrcity= place.locality;
-      usrdistrict = place.subAdministrativeArea;
-      usrstate=place.administrativeArea;
-      usrnation=place.country;
-    });
-    print("City: ${place.locality}");
-    print("District: ${place.subAdministrativeArea}");
-    print("State: ${place.administrativeArea}");
-    print("Country: ${place.country}");
   }
 
   @override
@@ -56,7 +76,13 @@ class _HomePageState extends State<HomePage> {
             Greetings(username: usrname),
             SizedBox(height: 10),
             // current locations
-            UserLocation(city: usrcity, district: usrdistrict, state: usrstate, nation: usrnation),
+            UserLocation(
+              city: usrcity,
+              district: usrdistrict,
+              state: usrstate,
+              nation: usrnation,
+              onChange: getLocationDetails,
+            ),
             SizedBox(height: 10),
             // ai safety scores
             SafetyScore(score: usrscore),

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class UserLocation extends StatefulWidget {
   final String? nation,city,district,state;
+  final VoidCallback? onChange;
   const UserLocation({
     super.key,
     required this.city,
     required this.state,
     required this.district,
-    required this.nation
+    required this.nation,
+    required this.onChange
   });
 
   @override
@@ -96,7 +98,7 @@ class _UserLocationState extends State<UserLocation> {
                   backgroundColor: const Color(0xFF102242),
                   padding: EdgeInsets.zero,
                 ),
-                onPressed: () {},
+                onPressed: widget.onChange,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
