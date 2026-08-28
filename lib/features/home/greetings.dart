@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class Greetings extends StatefulWidget {
   final String? username;
   const Greetings({
@@ -12,6 +11,7 @@ class Greetings extends StatefulWidget {
 }
 
 class _GreetingsState extends State<Greetings> {
+
   @override
   Widget build(BuildContext context) {
     return Row(
