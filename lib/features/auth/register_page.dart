@@ -19,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void validateInput(){
+    void validateInput() async{
       if (usrname.text.isEmpty || password.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -44,10 +44,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
       }
-      else if(!verifyuser(username.text.trim(), context)){
-
+      else if(! await verifyuser(usrname.text.trim(), context)){
+        if(!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("username already taken!"),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
       else{
+        if(!context.mounted) return;
         register(usrname.text.trim(),email.text.trim(),password.text.trim(),context);
       }
     }
