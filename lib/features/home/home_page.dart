@@ -30,6 +30,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _loadCachedLocation();
     getLocationDetails();
+    loaddetails();
+  }
+
+  Future<void> loaddetails() async {
+    final info = await getUserInfo(context);
+    if (!mounted || info == null) return;
+    setState(() {
+      usrname = info["username"] ?? "Dear User";
+    });
   }
 
   Future<void> _loadCachedLocation() async {
@@ -49,7 +58,7 @@ class _HomePageState extends State<HomePage> {
 
       List<Placemark> places = await geocoding.placemarkFromCoordinates(
         position.latitude,
-        position.longitude
+        position.longitude,
         // 13.0688,
         // 74.9936
       );

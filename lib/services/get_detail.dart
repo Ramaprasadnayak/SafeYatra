@@ -13,17 +13,24 @@ Future<List<String?>> getLocation() async {
   final nation=prefs.getString("nation");
   return [city,district,state,nation];
 }
-Future<List<String>> getUserInfo(BuildContext context) async {
+
+
+Future<Map<String, dynamic>?> getUserInfo(BuildContext context) async {
   try {
     final user = FirebaseAuth.instance.currentUser;
+
     if (user == null) {
-      return [];
+      return null;
     }
+
     final token = await user.getIdToken();
+
     final apiUrl = dotenv.env["apiUrl"];
+
     if (apiUrl == null || apiUrl.isEmpty) {
-      return [];
+      return null;
     }
+
     final response = await http.get(
       Uri.parse("http://$apiUrl/auth/getinfo"),
       headers: {
@@ -31,20 +38,25 @@ Future<List<String>> getUserInfo(BuildContext context) async {
         "Authorization": "Bearer $token",
       },
     );
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+
       if (data["message"] == "retrieved info") {
-        return List<String>.from(data["info"] ?? []);
+        return Map<String, dynamic>.from(data["info"]);
       }
     }
-    return [];
+
+    return null;
   } catch (e) {
-    if (!context.mounted) return [];
+    if (!context.mounted) return null;
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Unable to retrieve user information."),
       ),
     );
-    return [];
+
+    return null;
   }
 }
