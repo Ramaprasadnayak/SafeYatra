@@ -14,7 +14,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController usrname = TextEditingController();
-  TextEditingController phno = TextEditingController();
+  TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
   @override
@@ -36,16 +36,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
       }
-      // else if (phno.text.trim().length != 10) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text("phone number must be in 10 numbers"),
-      //       duration: Duration(seconds: 2),
-      //     ),
-      //   );
-      // }
+      else if (email.text.trim().endsWith("@gmail.com")) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("gmail must end with @gmail.com"),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      else if(!verifyuser(username.text.trim(), context)){
+
+      }
       else{
-        register(usrname.text.trim(),password.text.trim(),context);
+        register(usrname.text.trim(),email.text.trim(),password.text.trim(),context);
       }
     }
     return Scaffold(
@@ -95,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 30),
               MyTextField( 
-                hintText: "Choose a Username or Email",
+                hintText: "Choose a Username",
                 height: 56,
                 width: 380,
                 prefixicon: Icons.person_outline,
@@ -104,16 +107,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hideText: false,
               ),
               const SizedBox(height: 20),
-              // MyTextField(
-              //   hintText: "Phone Number",
-              //   height: 56,
-              //   width: 380,
-              //   prefixicon: Icons.phone_outlined,
-              //   controller: phno,
-              //   eyebutton: false,
-              //   hideText: false,
-              // ),
-              // const SizedBox(height: 20),
+              MyTextField(
+                hintText: "Choose a email",
+                height: 56,
+                width: 380,
+                prefixicon: Icons.email_outlined,
+                controller: email,
+                eyebutton: false,
+                hideText: false,
+              ),
+              const SizedBox(height: 20),
               MyTextField(
                 hintText: "Create Strong Password",
                 height: 56,

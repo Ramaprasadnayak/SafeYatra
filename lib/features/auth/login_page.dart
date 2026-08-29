@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(width: 10),
-                  ], 
+                  ],  
                 ),
                 const SizedBox(height: 40),
                 Button(
