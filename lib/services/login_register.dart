@@ -34,7 +34,7 @@ Future<void> register(String username,String email,String password,BuildContext 
      
     }
     if(!context.mounted) return;
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen()),
     );

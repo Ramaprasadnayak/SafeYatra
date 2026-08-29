@@ -5,7 +5,7 @@ class MyTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final bool eyebutton, hideText;
-  final IconData prefixicon;
+  final Widget prefixicon;
   const MyTextField({
     super.key,
     required this.hintText, 
@@ -54,10 +54,7 @@ class _TextFieldState extends State<MyTextField> {
         obscureText: isvisible,
         controller: widget.controller,
         decoration: InputDecoration(
-          prefixIcon: Icon(
-            widget.prefixicon,
-            color: Theme.of(context).inputDecorationTheme.prefixIconColor,
-          ),
+          prefixIcon: widget.prefixicon,
           hintText: widget.hintText,
           hintStyle: Theme.of(context).inputDecorationTheme.hintStyle?.copyWith(
             fontSize: 16,

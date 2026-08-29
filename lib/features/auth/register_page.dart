@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:safeyatra/services/login_register.dart';
+import 'package:safeyatra/features/auth/phone_page.dart';
+// import 'package:safeyatra/services/login_register.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 import 'package:safeyatra/widgets/text_field.dart';
 
@@ -36,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
       }
-      else if (email.text.trim().endsWith("@gmail.com")) {
+      else if (!email.text.trim().endsWith("@gmail.com")) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("gmail must end with @gmail.com"),
@@ -44,18 +45,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
       }
-      else if(! await verifyuser(usrname.text.trim(), context)){
-        if(!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("username already taken!"),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
+      // else if(! await verifyuser(usrname.text.trim(), context)){
+      //   if(!context.mounted) return;
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text("username already taken!"),
+      //       duration: Duration(seconds: 2),
+      //     ),
+      //   );
+      // }
       else{
         if(!context.mounted) return;
-        register(usrname.text.trim(),email.text.trim(),password.text.trim(),context);
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context)=>PhonePage(
+              usrname:usrname.text.trim(),
+              email:email.text.trim(),
+              password:password.text.trim(),
+              context:context
+        )));
       }
     }
     return Scaffold(
@@ -108,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hintText: "Choose a Username",
                 height: 56,
                 width: 380,
-                prefixicon: Icons.person_outline,
+                prefixicon: Icon(Icons.person_outline),
                 controller: usrname,
                 eyebutton: false,
                 hideText: false,
@@ -118,7 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hintText: "Choose a email",
                 height: 56,
                 width: 380,
-                prefixicon: Icons.email_outlined,
+                prefixicon: Icon(Icons.email_outlined),
                 controller: email,
                 eyebutton: false,
                 hideText: false,
@@ -128,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hintText: "Create Strong Password",
                 height: 56,
                 width: 380,
-                prefixicon: Icons.lock_outline,
+                prefixicon: Icon(Icons.lock_outline),
                 controller: password,
                 eyebutton: true,
                 hideText: true,

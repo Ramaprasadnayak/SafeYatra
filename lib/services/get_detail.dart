@@ -14,39 +14,32 @@ Future<List<String?>> getLocation() async {
   return [city,district,state,nation];
 }
 
-
 Future<Map<String, dynamic>?> getUserInfo(BuildContext context) async {
   try {
     final user = FirebaseAuth.instance.currentUser;
-
     if (user == null) {
       return null;
     }
-
-    final token = await user.getIdToken();
-
+    final token = await user.getIdToken(true);
+    if (token == null || token.isEmpty) {
+      return null;
+    }
     final apiUrl = dotenv.env["apiUrl"];
-
     if (apiUrl == null || apiUrl.isEmpty) {
       return null;
     }
-
     final response = await http.get(
       Uri.parse("http://$apiUrl/auth/getinfo"),
       headers: {
-        "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
     );
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-
       if (data["message"] == "retrieved info") {
         return Map<String, dynamic>.from(data["info"]);
       }
     }
-
     return null;
   } catch (e) {
     if (!context.mounted) return null;

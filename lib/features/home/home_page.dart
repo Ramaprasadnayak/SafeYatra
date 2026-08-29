@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Geocoding geocoding = Geocoding();
 
-  String? usrname = "Dear User";
+  String? usrname = "Dear Explorer";
   String usrcity = "your city";
   String usrdistrict = "your district";
   String usrstate = "your state";
@@ -35,10 +35,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> loaddetails() async {
     final info = await getUserInfo(context);
+    final prefs = await SharedPreferences.getInstance();
     if (!mounted || info == null) return;
     setState(() {
-      usrname = info["username"] ?? "Dear User";
+      usrname = info["username"] ?? "Dear Explorer";
     });
+    await prefs.setString("usrname", usrname??"Dear Explorer");
   }
 
   Future<void> _loadCachedLocation() async {

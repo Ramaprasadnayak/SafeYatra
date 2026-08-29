@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safeyatra/features/auth/register_page.dart';
-import 'package:safeyatra/features/home_screen.dart';
+// import 'package:safeyatra/features/home_screen.dart';
 import 'package:safeyatra/services/login_register.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 import 'package:safeyatra/widgets/text_field.dart';
@@ -49,12 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
-          },
-        ),
         title: RichText(
           text: TextSpan(
             children: [
@@ -93,10 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
                 MyTextField(
-                  hintText: "Username or Email",
+                  hintText: "Enter Email",
                   height: 56,
                   width: 380,
-                  prefixicon: Icons.person_outline,
+                  prefixicon: Icon(Icons.person_outline),
                   controller: email,
                   eyebutton: false, 
                   hideText: false,
@@ -106,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: "Enter Password",
                   height: 56,
                   width: 380,
-                  prefixicon: Icons.lock_outline,
+                  prefixicon: Icon(Icons.lock_outline),
                   controller: password,
                   eyebutton: true,
                   hideText: true,
