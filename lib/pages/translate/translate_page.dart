@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:safeyatra/features/translate/speak_translate.dart';
-import 'package:safeyatra/features/translate/text_translate.dart';
+import 'package:safeyatra/pages/translate/speak_translate.dart';
+import 'package:safeyatra/pages/translate/text_translate.dart';
 import 'package:safeyatra/services/translate.dart';
 import 'package:safeyatra/services/tts_service.dart';
 import 'package:safeyatra/widgets/drop_down_button.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safeyatra/core/constants/number.dart';
-import 'package:safeyatra/features/auth/otp_page.dart';
+import 'package:safeyatra/pages/auth/otp_page.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 import 'package:safeyatra/widgets/drop_down_button.dart';
 import 'package:safeyatra/widgets/text_field.dart';

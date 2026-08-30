@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:safeyatra/features/auth/login_page.dart';
-import 'package:safeyatra/features/home_screen.dart';
+import 'package:safeyatra/pages/auth/login_page.dart';
+import 'package:safeyatra/pages/home_screen.dart';
 import 'package:safeyatra/providers/theme_provider.dart';
 import 'package:safeyatra/themes/dark_theme.dart';
 import 'package:safeyatra/themes/light_theme.dart';

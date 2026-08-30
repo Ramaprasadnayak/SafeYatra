@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:safeyatra/features/home/greetings.dart';
-import 'package:safeyatra/features/home/safety_score.dart';
-import 'package:safeyatra/features/home/user_location.dart';
+import 'package:safeyatra/pages/home/greetings.dart';
+import 'package:safeyatra/pages/home/safety_score.dart';
+import 'package:safeyatra/pages/home/user_location.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:safeyatra/services/get_detail.dart';
 import 'package:safeyatra/services/location.dart';

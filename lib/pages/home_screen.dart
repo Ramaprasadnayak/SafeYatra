@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 // import 'package:safeyatra/features/auth/login_page.dart';
-import 'package:safeyatra/features/home/home_page.dart';
-import 'package:safeyatra/features/notifications/notification.dart';
-import 'package:safeyatra/features/profile/profile_page.dart';
-import 'package:safeyatra/features/translate/translate_page.dart';
+import 'package:safeyatra/pages/home/home_page.dart';
+import 'package:safeyatra/pages/notifications/notification.dart';
+import 'package:safeyatra/pages/profile/profile_page.dart';
+import 'package:safeyatra/pages/safemaps/safemap.dart';
+import 'package:safeyatra/pages/translate/translate_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       HomePage(),
-      Center(child: Text("safe maps")),
+      Safemap(),
       Center(child: Text("sos")),
       TranslatePage(),
       ProfilePage(),

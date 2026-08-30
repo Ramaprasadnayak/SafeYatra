@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:safeyatra/features/home_screen.dart';
+import 'package:safeyatra/pages/home_screen.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 
 // register(usrname.text.trim(),email.text.trim(),password.text.trim(),context);
