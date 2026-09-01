@@ -51,7 +51,7 @@ class _TranslatePageState extends State<TranslatePage> {
                 MyDropdownMenu(
                   value: source,
                   height: 500,
-                  width: 200,
+                  width: 150,
                   mylist: sourceLanguages,
                   onChange: onSourceChange,
                 ),

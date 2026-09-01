@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Geocoding geocoding = Geocoding();
 
-  String? usrname = "Dear Explorer";
+  String usrname = "Dear Explorer";
   String usrcity = "your city";
   String usrdistrict = "your district";
   String usrstate = "your state";
@@ -38,9 +38,9 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     if (!mounted || info == null) return;
     setState(() {
-      usrname = info["username"] ?? "Dear Explorer";
+      usrname = prefs.getString("usrname") ?? info["username"];
     });
-    await prefs.setString("usrname", usrname??"Dear Explorer");
+    await prefs.setString("usrname", usrname);
   }
 
   Future<void> _loadCachedLocation() async {
@@ -56,6 +56,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getLocationDetails() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
       Position position = await getCurrentPosition();
 
       List<Placemark> places = await geocoding.placemarkFromCoordinates(
@@ -68,8 +69,9 @@ class _HomePageState extends State<HomePage> {
         print("No location information found");
         return;
       }
+      await prefs.setDouble("latitude", position.latitude);
+      await prefs.setDouble("longitude", position.longitude);
       Placemark place = places.first;
-      final prefs = await SharedPreferences.getInstance();
 
       final currentCity = place.locality ?? "";
       // city that district was last successfully resolved for
