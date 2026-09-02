@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:safeyatra/core/constants/map_style.dart';
+import 'package:safeyatra/services/district_boundary.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Safemap extends StatefulWidget {
@@ -14,6 +15,8 @@ class _SafemapState extends State<Safemap> {
   double longitude = 77.5946;
   bool isLoading = true;
   late GoogleMapController _controller;
+  Set<Polygon> _polygons={};
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,23 @@ class _SafemapState extends State<Safemap> {
     });
   }
 
+  void loadBoundary(String distcode) async {
+    final boundaries = await getDistrictBoundaries(distcode, context);
+    if (boundaries != null) {
+      final Set<Polygon> polygons = boundaries.asMap().entries.map((entry) {
+        return Polygon(
+          polygonId: PolygonId("district_${entry.key}"),
+          points: entry.value,
+          strokeWidth: 2,
+          fillColor: Colors.blue.withValues(alpha: 0.25),
+        );
+      }).toSet();
+      setState(() {
+        _polygons = polygons;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -42,7 +62,7 @@ class _SafemapState extends State<Safemap> {
             target: LatLng(latitude, longitude),
             zoom: 12,
           ),
-          // polygons: _buildUdupiPolygons(),
+          polygons: _polygons,
           style: blueMapStyle,
           onMapCreated: (GoogleMapController controller) {
             _controller = controller;
@@ -83,8 +103,12 @@ class _SafemapState extends State<Safemap> {
                 side: const WidgetStatePropertyAll(
                   BorderSide(color: Colors.blue, width: 2),
                 ),
-                backgroundColor: const WidgetStatePropertyAll(Color(0xFF0E1827)),
-                onSubmitted: (val) => {},
+                backgroundColor: const WidgetStatePropertyAll(
+                  Color(0xFF0E1827),
+                ),
+                onSubmitted: (val) => {
+                  loadBoundary(val)
+                },
               ),
             ),
           ),
