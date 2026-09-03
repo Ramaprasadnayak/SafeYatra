@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:safeyatra/core/constants/map_style.dart';
+import 'package:safeyatra/pages/safemaps/notice_menu.dart';
 import 'package:safeyatra/services/district_boundary.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +16,8 @@ class _SafemapState extends State<Safemap> {
   double longitude = 77.5946;
   bool isLoading = true;
   late GoogleMapController _controller;
-  Set<Polygon> _polygons={};
+  Set<Polygon> _polygons = {};
+  String _district = "";
 
   @override
   void initState() {
@@ -33,8 +35,10 @@ class _SafemapState extends State<Safemap> {
   }
 
   void loadBoundary(String distcode) async {
-    final boundaries = await getDistrictBoundaries(distcode, context);
-    if (boundaries != null) {
+    final result = await getDistrictBoundaries(distcode, context);
+    if (result != null) {
+      final boundaries = result["boundaries"] as List<List<LatLng>>;
+      final matchedName = result["matchedDistrict"] as String;
       final Set<Polygon> polygons = boundaries.asMap().entries.map((entry) {
         return Polygon(
           polygonId: PolygonId("district_${entry.key}"),
@@ -43,10 +47,22 @@ class _SafemapState extends State<Safemap> {
           fillColor: Colors.blue.withValues(alpha: 0.25),
         );
       }).toSet();
+
       setState(() {
         _polygons = polygons;
+        _district = matchedName;
       });
     }
+    loadDownMenu(_district);
+  }
+
+  void loadDownMenu(String district) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return NoticeMenu(district: district);
+      },
+    );
   }
 
   @override
@@ -106,9 +122,7 @@ class _SafemapState extends State<Safemap> {
                 backgroundColor: const WidgetStatePropertyAll(
                   Color(0xFF0E1827),
                 ),
-                onSubmitted: (val) => {
-                  loadBoundary(val)
-                },
+                onSubmitted: (val) => {loadBoundary(val)},
               ),
             ),
           ),
