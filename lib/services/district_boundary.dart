@@ -16,8 +16,6 @@ Future<Map<String, dynamic>?> getDistrictBoundaries(String distname, BuildContex
         },
       );
       final data = jsonDecode(response.body);
-      // debugPrint("API DATA: $data");
-      // debugPrint("CENTER: ${data["center"]}");
       if (response.statusCode == 200 && data["message"] == "retrieved boundary successfully") {
         final String matchedDistrict = data["matched_name"];
         final List<dynamic> polygons = data["polygons"];
