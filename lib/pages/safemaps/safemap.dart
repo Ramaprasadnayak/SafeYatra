@@ -12,8 +12,8 @@ class Safemap extends StatefulWidget {
 }
 
 class _SafemapState extends State<Safemap> {
-  double latitude = 12.9716;
-  double longitude = 77.5946;
+  double latitude = 13.0688;
+  double longitude = 74.9936;
   bool isLoading = true;
   late GoogleMapController _controller;
   Set<Polygon> _polygons = {};
@@ -27,11 +27,18 @@ class _SafemapState extends State<Safemap> {
 
   Future<void> _loadLocation() async {
     final prefs = await SharedPreferences.getInstance();
-    latitude = prefs.getDouble("latitude") ?? 12.9716;
-    longitude = prefs.getDouble("longitude") ?? 77.5946;
+    latitude = prefs.getDouble("latitude") ?? 13.0688;
+    longitude = prefs.getDouble("longitude") ?? 74.9936;
+    // goToLocation(latitude, longitude);
     setState(() {
       isLoading = false;
     });
+  }
+
+  void goToLocation(double latitude, double longitude) {
+    _controller.animateCamera(
+      CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 8),
+    );
   }
 
   void loadBoundary(String distcode) async {
@@ -39,6 +46,10 @@ class _SafemapState extends State<Safemap> {
     if (result != null) {
       final boundaries = result["boundaries"] as List<List<LatLng>>;
       final matchedName = result["matchedDistrict"] as String;
+      final center = result["center"] as Map<String, dynamic>;
+      final coordinates = center["coordinates"] as List<dynamic>;
+      final double longitude = (coordinates[0] as num).toDouble();
+      final double latitude = (coordinates[1] as num).toDouble();
       final Set<Polygon> polygons = boundaries.asMap().entries.map((entry) {
         return Polygon(
           polygonId: PolygonId("district_${entry.key}"),
@@ -47,13 +58,13 @@ class _SafemapState extends State<Safemap> {
           fillColor: Colors.blue.withValues(alpha: 0.25),
         );
       }).toSet();
-
       setState(() {
         _polygons = polygons;
         _district = matchedName;
       });
+      goToLocation(latitude, longitude);
+      loadDownMenu(_district);
     }
-    loadDownMenu(_district);
   }
 
   void loadDownMenu(String district) {
@@ -70,7 +81,6 @@ class _SafemapState extends State<Safemap> {
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-
     return Stack(
       children: [
         GoogleMap(
