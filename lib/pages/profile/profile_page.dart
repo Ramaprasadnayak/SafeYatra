@@ -43,7 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 return MyCard(
                   prefixIcon: entry.value[0] as IconData,
                   text: entry.value[1] as String,
-                  onPress: entry.value[3] as VoidCallback?,
+                  // onPress: entry.value[2] as VoidCallback,
+                  onPress: () {},
                 );
               }).toList(),
             ),
