@@ -13,25 +13,19 @@ Future<String?> predict(BuildContext context,String districtname) async {
     );
     final data = jsonDecode(response.body);
     if (response.statusCode == 200 && data["message"] == "Prediction Successful") {
-      return data["translated_text"];
+      return data["result"];
     }
-
     if (!context.mounted) return null;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          data["detail"] ?? data["message"] ?? "Translation Failed",
-        ),
+        content: Text("Failed prediction"),
         backgroundColor: Colors.red,
         duration: const Duration(seconds: 2),
       ),
     );
-
     return null;
   } catch (e) {
     if (!context.mounted) return null;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Error: $e"),
@@ -39,7 +33,6 @@ Future<String?> predict(BuildContext context,String districtname) async {
         duration: const Duration(seconds: 2),
       ),
     );
-
     return null;
   }
 }
