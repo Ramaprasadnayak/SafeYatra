@@ -5,6 +5,7 @@ import 'package:safeyatra/pages/home/safety_score.dart';
 import 'package:safeyatra/pages/home/user_location.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:safeyatra/services/get_detail.dart';
+import 'package:safeyatra/services/get_prediction.dart';
 import 'package:safeyatra/services/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,22 @@ class _HomePageState extends State<HomePage> {
     _loadCachedLocation();
     getLocationDetails();
     loaddetails();
+    predictDetails();
+  }
+
+  Future<void> predictDetails() async {
+    final data = await predict(context, usrdistrict);
+
+    if (data == null || !mounted) return;
+
+    setState(() {
+      usrscore = (data["risk_score"] as num).toDouble();
+    });
+
+    print("District: ${data["district_name"]}");
+    print("State: ${data["state_name"]}");
+    print("Risk Score: ${data["risk_score"]}");
+    print("Risk Label: ${data["risk_label"]}");
   }
 
   Future<void> loaddetails() async {
@@ -63,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         // position.latitude,
         // position.longitude,
         13.0688,
-        74.9936
+        74.9936,
       );
       if (places.isEmpty) {
         print("No location information found");
@@ -84,17 +101,14 @@ class _HomePageState extends State<HomePage> {
           district = await getDistrict(
             context,
             13.0688,
-            74.9936
+            74.9936,
             // position.latitude,
             // position.longitude,
           );
-          // only mark as synced if we actually got a district back
           if (district != null && district.isNotEmpty) {
             await prefs.setString("districtSyncedCity", currentCity);
           }
         }
-        // if offline, districtSyncedCity is NOT updated,
-        // so it will retry next time there's connectivity
       }
 
       await prefs.setString("city", currentCity);
@@ -133,8 +147,8 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 10),
             SafetyScore(score: usrscore),
-            Card(),
-            Row(),
+            // Card(),
+            // Row(),
           ],
         ),
       ),

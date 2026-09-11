@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-Future<String?> predict(BuildContext context,String districtname) async {
+Future<Map<String, dynamic>?> predict(BuildContext context,String districtname) async {
   try {
     String apiUrl = dotenv.env["apiUrl"]!;
     final response = await http.get(
