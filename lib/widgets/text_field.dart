@@ -6,8 +6,10 @@ class MyTextField extends StatefulWidget {
   final String hintText;
   final bool eyebutton, hideText;
   final Widget prefixicon;
+  final bool enablefocus;
   const MyTextField({
     super.key,
+    this.enablefocus=true,
     required this.hintText, 
     required this.height,
     required this.width,
@@ -69,9 +71,10 @@ class _TextFieldState extends State<MyTextField> {
 
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: Theme.of(
+            borderSide: widget.enablefocus?
+            Theme.of(
               context,
-            ).inputDecorationTheme.focusedBorder!.borderSide,
+            ).inputDecorationTheme.focusedBorder!.borderSide:BorderSide(color: Colors.black)
           ),
           suffixIcon: widget.eyebutton
               ? IconButton(

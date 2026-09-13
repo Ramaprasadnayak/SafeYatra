@@ -29,24 +29,26 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _loadCachedLocation();
-    getLocationDetails();
-    loaddetails();
-    predictDetails();
+    _initializeHome();
+  }
+
+  Future<void> _initializeHome() async {
+    await _loadCachedLocation();
+    await getLocationDetails();
+    await loaddetails();
+    await predictDetails();
   }
 
   Future<void> predictDetails() async {
     final data = await predict(context, usrdistrict);
-
     if (data == null || !mounted) return;
-
     setState(() {
-      usrscore = (data["risk_score"] as num).toDouble();
+      usrscore = (data["safety_score"] as num).toDouble();
     });
 
     print("District: ${data["district_name"]}");
     print("State: ${data["state_name"]}");
-    print("Risk Score: ${data["risk_score"]}");
+    print("Risk Score: ${data["safety_score"]}");
     print("Risk Label: ${data["risk_label"]}");
   }
 
@@ -77,10 +79,10 @@ class _HomePageState extends State<HomePage> {
       Position position = await getCurrentPosition();
 
       List<Placemark> places = await geocoding.placemarkFromCoordinates(
-        // position.latitude,
-        // position.longitude,
-        13.0688,
-        74.9936,
+        position.latitude,
+        position.longitude,
+        // 13.0688,
+        // 74.9936,
       );
       if (places.isEmpty) {
         print("No location information found");
@@ -100,10 +102,10 @@ class _HomePageState extends State<HomePage> {
           if (!mounted) return;
           district = await getDistrict(
             context,
-            13.0688,
-            74.9936,
-            // position.latitude,
-            // position.longitude,
+            // 13.0688,
+            // 74.9936,
+            position.latitude,
+            position.longitude
           );
           if (district != null && district.isNotEmpty) {
             await prefs.setString("districtSyncedCity", currentCity);

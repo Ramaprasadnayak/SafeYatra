@@ -131,11 +131,12 @@ class _PhonePageState extends State<PhonePage> {
                 MyTextField(
                   hintText: "Enter Phone number",
                   height: 56,
+                  enablefocus: false,
                   width: fieldWidth.toDouble(),
                   prefixicon: MyDropdownMenu(
                     value: "+91", 
                     onChange: (s){}, 
-                    height: 400,
+                    height: 200,
                     width: 115,
                     mylist: numbers
                   ),
