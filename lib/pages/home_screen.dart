@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safeyatra/pages/sos/sos_page.dart';
 // import 'package:safeyatra/features/auth/login_page.dart';
 import 'package:safeyatra/pages/home/home_page.dart';
 import 'package:safeyatra/pages/notifications/notification.dart';
@@ -31,7 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Widget> pages = [
       HomePage(),
       Safemap(),
-      Center(child: Text("sos")),
+      SosPage(
+        onCallEmergency: () {
+          // e.g. url_launcher: launchUrl(Uri.parse("tel:112"));
+        },
+        onViewContacts: () {
+          // navigate to your contacts page
+        },
+      ),
       TranslatePage(),
       ProfilePage(),
     ];
