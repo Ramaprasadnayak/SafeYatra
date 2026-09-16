@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors;
+import './sos_page.dart' show SosColors;
 
 /// A lightweight stand-in for a real map. Draws a dark street-style
 /// grid, a pulsing pin at the center, and a couple of neighbourhood

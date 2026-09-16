@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors;
+import './sos_page.dart' show SosColors;
 import 'sos_map_preview.dart';
 
 /// Card showing "Your Current Location", the SOS Active pill, and a

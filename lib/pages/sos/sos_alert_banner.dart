@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors;
+import './sos_page.dart' show SosColors;
 
 /// The big red "EMERGENCY SOS" banner at the top of the page.
 class SosAlertBanner extends StatelessWidget {

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'widgets/sos_alert_banner.dart';
-import 'widgets/sos_location_card.dart';
-import 'widgets/sos_call_button.dart';
-import 'widgets/sos_services_notified.dart';
-import 'widgets/sos_emergency_contacts_card.dart';
-import 'widgets/sos_info_banner.dart';
+import 'package:safeyatra/pages/sos/sos_alert_banner.dart';
+import 'package:safeyatra/pages/sos/sos_call_button.dart';
+import 'package:safeyatra/pages/sos/sos_location_card.dart';
+import 'package:safeyatra/pages/sos/sos_services_notified.dart';
+import 'package:safeyatra/pages/sos/sos_emergency_contacts_card.dart';
+import 'package:safeyatra/pages/sos/sos_info_banner.dart';
 
 /// Colors reused across the SOS feature. Pulled out here so every
 /// widget in this folder stays visually consistent.
@@ -37,15 +36,8 @@ class EmergencyService {
 }
 
 class SosPage extends StatefulWidget {
-  /// Called when the person taps "Call 112". Wire this up to
-  /// url_launcher (tel:112) or your own dialer integration.
   final VoidCallback? onCallEmergency;
-
-  /// Called when "View Contacts" is tapped.
   final VoidCallback? onViewContacts;
-
-  /// Optional: pass real coordinates/address once you have a
-  /// location service wired up. Falls back to placeholder data.
   final String locality;
   final String district;
   final String coordinates;
@@ -64,9 +56,6 @@ class SosPage extends StatefulWidget {
 }
 
 class _SosPageState extends State<SosPage> {
-  // In a real app this would flip to true the moment the SOS is
-  // triggered (e.g. from a home-screen SOS button) and the
-  // activatedAt timestamp would be captured then.
   bool sosActive = true;
   late final DateTime activatedAt = DateTime.now();
 

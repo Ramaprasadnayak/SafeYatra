@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors, EmergencyService;
+import './sos_page.dart' show SosColors, EmergencyService;
 
 /// "Emergency Services Notified" card with a 4-across grid of
 /// service icons and their notified status.

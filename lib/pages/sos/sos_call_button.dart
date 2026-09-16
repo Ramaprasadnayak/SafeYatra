@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors;
+import './sos_page.dart' show SosColors;
 
 /// The big red "CALL 112" call-to-action.
 class SosCallButton extends StatelessWidget {
