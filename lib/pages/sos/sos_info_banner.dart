@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors;
+import './sos_page.dart' show SosColors;
 
 /// Small reassurance banner shown at the bottom of the page.
 class SosInfoBanner extends StatelessWidget {

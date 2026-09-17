@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../sos_page.dart' show SosColors;
+import './sos_page.dart' show SosColors;
 
 /// "Your Emergency Contacts" row with a "View Contacts" button.
 class SosEmergencyContactsCard extends StatelessWidget {
