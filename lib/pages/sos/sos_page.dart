@@ -4,8 +4,6 @@ import 'package:safeyatra/pages/sos/sos_call_button.dart';
 import 'package:safeyatra/pages/sos/sos_location_card.dart';
 import 'package:safeyatra/pages/sos/sos_info_banner.dart';
 
-/// Colors reused across the SOS feature. Pulled out here so every
-/// widget in this folder stays visually consistent.
 class SosColors {
   static const background = Color(0xFF0A0E1A);
   static const card = Color(0xFF131A2C);
@@ -18,7 +16,6 @@ class SosColors {
   static const textSecondary = Color(0xFF8B93A7);
 }
 
-/// A single emergency service entry, e.g. Police / Ambulance / Fire.
 class EmergencyService {
   final String label;
   final IconData icon;

@@ -14,11 +14,11 @@ class SosAlertBanner extends StatelessWidget {
           center: Alignment.topCenter,
           radius: 1.4,
           colors: [
-            SosColors.red.withOpacity(0.28),
+            SosColors.red.withValues(alpha: 0.28),
             SosColors.redDark,
           ],
         ),
-        border: Border.all(color: SosColors.red.withOpacity(0.35)),
+        border: Border.all(color: SosColors.red.withValues(alpha: 0.35)),
       ),
       child: Column(
         children: [
@@ -27,7 +27,7 @@ class SosAlertBanner extends StatelessWidget {
             height: 64,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: SosColors.red.withOpacity(0.15),
+              color: SosColors.red.withValues(alpha: 0.15),
             ),
             child: const Icon(
               Icons.notifications_active,

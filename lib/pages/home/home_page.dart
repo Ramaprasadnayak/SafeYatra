@@ -79,10 +79,10 @@ class _HomePageState extends State<HomePage> {
       Position position = await getCurrentPosition();
 
       List<Placemark> places = await geocoding.placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-        // 13.0688,
-        // 74.9936,
+        // position.latitude,
+        // position.longitude,
+        13.0688,
+        74.9936,
       );
       if (places.isEmpty) {
         print("No location information found");
@@ -102,10 +102,10 @@ class _HomePageState extends State<HomePage> {
           if (!mounted) return;
           district = await getDistrict(
             context,
-            // 13.0688,
-            // 74.9936,
-            position.latitude,
-            position.longitude
+            13.0688,
+            74.9936,
+            // position.latitude,
+            // position.longitude
           );
           if (district != null && district.isNotEmpty) {
             await prefs.setString("districtSyncedCity", currentCity);
