@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:safeyatra/pages/sos/sos_alert_banner.dart';
 import 'package:safeyatra/pages/sos/sos_call_button.dart';
 import 'package:safeyatra/pages/sos/sos_location_card.dart';
-import 'package:safeyatra/pages/sos/sos_services_notified.dart';
-import 'package:safeyatra/pages/sos/sos_emergency_contacts_card.dart';
 import 'package:safeyatra/pages/sos/sos_info_banner.dart';
 
 /// Colors reused across the SOS feature. Pulled out here so every
@@ -58,30 +56,6 @@ class SosPage extends StatefulWidget {
 class _SosPageState extends State<SosPage> {
   bool sosActive = true;
   late final DateTime activatedAt = DateTime.now();
-
-  static const services = [
-    EmergencyService(
-      label: "Police",
-      icon: Icons.shield_outlined,
-      iconBackground: SosColors.blue,
-    ),
-    EmergencyService(
-      label: "Ambulance",
-      icon: Icons.local_shipping_outlined,
-      iconBackground: Color(0xFF7A2020),
-    ),
-    EmergencyService(
-      label: "Fire",
-      icon: Icons.local_fire_department_outlined,
-      iconBackground: Color(0xFF9A5B12),
-    ),
-    EmergencyService(
-      label: "Disaster Mgmt",
-      icon: Icons.warning_amber_outlined,
-      iconBackground: Color(0xFF4A3B7A),
-    ),
-  ];
-
   String get _formattedTime {
     final hour = activatedAt.hour % 12 == 0 ? 12 : activatedAt.hour % 12;
     final minute = activatedAt.minute.toString().padLeft(2, '0');
@@ -111,11 +85,7 @@ class _SosPageState extends State<SosPage> {
               onTap: widget.onCallEmergency ?? () {},
             ),
             const SizedBox(height: 16),
-            SosServicesNotified(services: services),
             const SizedBox(height: 16),
-            SosEmergencyContactsCard(
-              onViewContacts: widget.onViewContacts ?? () {},
-            ),
             const SizedBox(height: 16),
             const SosInfoBanner(text: "Stay calm. Help is on the way."),
           ],

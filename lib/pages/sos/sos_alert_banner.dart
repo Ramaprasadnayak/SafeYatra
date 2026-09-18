@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import './sos_page.dart' show SosColors;
-
-/// The big red "EMERGENCY SOS" banner at the top of the page.
 class SosAlertBanner extends StatelessWidget {
   final bool active;
-
   const SosAlertBanner({super.key, required this.active});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,7 +58,7 @@ class SosAlertBanner extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            "Your location and details have been shared\nwith emergency services.",
+            "Your location and details will be shared\nwith emergency services.",
             textAlign: TextAlign.center,
             style: TextStyle(color: SosColors.textSecondary, fontSize: 13, height: 1.4),
           ),
