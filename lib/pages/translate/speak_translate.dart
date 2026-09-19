@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeakTranslate extends StatefulWidget {
-  const SpeakTranslate({super.key});
+  final Function(String) onChange;
+
+  const SpeakTranslate({
+    super.key,
+    required this.onChange,
+  });
 
   @override
   State<SpeakTranslate> createState() => _SpeakTranslateState();
@@ -17,11 +22,13 @@ class _SpeakTranslateState extends State<SpeakTranslate> {
   Future<void> startListening() async {
     bool available = await speechToText.initialize(
       onStatus: (status) {
+        if (!mounted) return;
         setState(() {
           isListening = status == "listening";
         });
       },
       onError: (error) {
+        if (!mounted) return;
         setState(() {
           isListening = false;
         });
@@ -33,12 +40,15 @@ class _SpeakTranslateState extends State<SpeakTranslate> {
         isListening = true;
         recognizedText = "";
       });
-
       await speechToText.listen(
         onResult: (result) {
+          if (!mounted) return;
           setState(() {
             recognizedText = result.recognizedWords;
           });
+
+          // Send speech text to TranslatePage
+          widget.onChange(result.recognizedWords);
         },
       );
     }
@@ -46,6 +56,8 @@ class _SpeakTranslateState extends State<SpeakTranslate> {
 
   Future<void> stopListening() async {
     await speechToText.stop();
+
+    if (!mounted) return;
 
     setState(() {
       isListening = false;
@@ -67,7 +79,6 @@ class _SpeakTranslateState extends State<SpeakTranslate> {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Row(
               children: [
