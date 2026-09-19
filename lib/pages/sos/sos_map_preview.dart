@@ -12,8 +12,6 @@ class SosMapPreview extends StatelessWidget {
       children: [
         Container(color: const Color(0xFF0D1424)),
         CustomPaint(painter: _GridPainter()),
-        // const Positioned(top: 24, right: 20, child: _AreaLabel("HSR Layout")),
-        // const Positioned(bottom: 30, left: 16, child: _AreaLabel("BTM Layout")),
         Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -38,7 +36,7 @@ class SosMapPreview extends StatelessWidget {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.55),
+              color: Colors.black.withValues(alpha: 0.55),
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white24),
             ),
