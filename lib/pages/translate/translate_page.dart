@@ -81,7 +81,9 @@ class _TranslatePageState extends State<TranslatePage> {
 
             const SizedBox(height: 5),
 
-            SpeakTranslate(),
+            SpeakTranslate(
+              onChange: onTextChange,
+            ),
 
             const SizedBox(height: 5),
 
