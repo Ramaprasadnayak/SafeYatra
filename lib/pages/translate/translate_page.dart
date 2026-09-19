@@ -19,7 +19,10 @@ class _TranslatePageState extends State<TranslatePage> {
   String target = "Kannada";
   String mytext = "";
   String? translation;
-
+  @override
+  void initState() {
+    super.initState();
+  }
   void onTextChange(String text) {
     setState(() {
       mytext = text;

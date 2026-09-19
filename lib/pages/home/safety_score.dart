@@ -104,7 +104,7 @@ class _SafetyScoreState extends State<SafetyScore> {
                       ],
                     ),
                     SizedBox(height: 10),
-                    OutlinedButton(onPressed: () {}, child: Text("View Details")),
+                    // OutlinedButton(onPressed: () {}, child: Text("View Details")),
                   ],
                 ),
                 const VerticalDivider(
