@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import './sos_page.dart' show SosColors;
 import 'sos_map_preview.dart';
 
-/// Card showing "Your Current Location", the SOS Active pill, and a
-/// mocked map preview centered on the person's coordinates.
-///
-/// Swap [SosMapPreview] for a real Google Maps / Mapbox widget when
-/// you wire up live location — everything else here stays the same.
 class SosLocationCard extends StatelessWidget {
   final String locality;
   final String district;
@@ -116,7 +111,7 @@ class _SosActivePill extends StatelessWidget {
       decoration: BoxDecoration(
         color: SosColors.redDark,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: SosColors.red.withOpacity(0.4)),
+        border: Border.all(color: SosColors.red.withValues(alpha: 0.4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
 import './sos_page.dart' show SosColors;
 
-/// A lightweight stand-in for a real map. Draws a dark street-style
-/// grid, a pulsing pin at the center, and a couple of neighbourhood
-/// labels — enough to match the design without pulling in a maps
-/// dependency.
-///
-/// Replace the body of `build` with a `GoogleMap(...)` /
-/// `FlutterMap(...)` widget once you have an API key configured;
-/// keep the same rounded-corner + overlay-button layout.
 class SosMapPreview extends StatelessWidget {
   final String centerLabel;
-
   const SosMapPreview({super.key, required this.centerLabel});
 
   @override
@@ -21,8 +12,8 @@ class SosMapPreview extends StatelessWidget {
       children: [
         Container(color: const Color(0xFF0D1424)),
         CustomPaint(painter: _GridPainter()),
-        const Positioned(top: 24, right: 20, child: _AreaLabel("HSR Layout")),
-        const Positioned(bottom: 30, left: 16, child: _AreaLabel("BTM Layout")),
+        // const Positioned(top: 24, right: 20, child: _AreaLabel("HSR Layout")),
+        // const Positioned(bottom: 30, left: 16, child: _AreaLabel("BTM Layout")),
         Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
