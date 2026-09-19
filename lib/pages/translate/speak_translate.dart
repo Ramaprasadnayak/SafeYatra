@@ -20,7 +20,6 @@ class _SpeakTranslateState extends State<SpeakTranslate> {
             Row(
               children: [
                 Text("Speak in the selected language"),
-                
               ],
             ),
             SizedBox(height: 40),
@@ -37,7 +36,9 @@ class _SpeakTranslateState extends State<SpeakTranslate> {
                 ],
               ),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  // write logic here
+                },
                 icon: const Icon(Icons.mic, color: Colors.white),
               ),
             ),

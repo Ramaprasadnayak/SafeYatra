@@ -48,19 +48,6 @@ class SosMapPreview extends StatelessWidget {
   }
 }
 
-class _AreaLabel extends StatelessWidget {
-  final String text;
-  const _AreaLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(color: SosColors.textSecondary, fontSize: 12),
-    );
-  }
-}
-
 class _PulsingPin extends StatefulWidget {
   @override
   State<_PulsingPin> createState() => _PulsingPinState();
@@ -100,7 +87,7 @@ class _PulsingPinState extends State<_PulsingPin> with SingleTickerProviderState
                     height: 46,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: SosColors.red.withOpacity(0.35),
+                      color: SosColors.red.withValues(alpha: 0.35),
                     ),
                   ),
                 ),
@@ -124,7 +111,7 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final linePaint = Paint()
-      ..color = Colors.white.withOpacity(0.06)
+      ..color = Colors.white.withValues(alpha: 0.06)
       ..strokeWidth = 1;
 
     // A handful of diagonal-ish "streets" for visual texture.
