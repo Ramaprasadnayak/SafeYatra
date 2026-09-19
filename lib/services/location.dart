@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
@@ -50,9 +51,8 @@ Future<Position> getCurrentPosition() async {
     ),
   );
 }
-
-
 Future<String?> getDistrict(
+  BuildContext context,
   double latitude,
   double longitude,
 ) async {
@@ -78,18 +78,33 @@ Future<String?> getDistrict(
     if (response.statusCode == 200 &&
         data["message"] == "retrived district") {
       print("District received: ${data["district"]}");
-
       return data["district"];
     }
 
-    print(
-      "District API failed: "
-      "${data["detail"] ?? data["message"] ?? "Something went wrong"}",
+    if (!context.mounted) return null;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          data["detail"] ?? data["message"] ?? "Something went wrong",
+        ),
+        backgroundColor: Colors.red,
+      ),
     );
 
     return null;
   } catch (e) {
     print("District API error: $e");
+
+    if (!context.mounted) return null;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error: $e"),
+        backgroundColor: Colors.red,
+      ),
+    );
+
     return null;
   }
 }
