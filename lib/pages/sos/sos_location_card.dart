@@ -97,21 +97,28 @@ class SosLocationCard extends StatelessWidget {
     );
   }
 }
-
 class _SosActivePill extends StatelessWidget {
   final bool active;
   final String timeLabel;
 
-  const _SosActivePill({required this.active, required this.timeLabel});
+  const _SosActivePill({
+    required this.active,
+    required this.timeLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 8,
+      ),
       decoration: BoxDecoration(
         color: SosColors.redDark,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: SosColors.red.withValues(alpha: 0.4)),
+        border: Border.all(
+          color: SosColors.red.withValues(alpha: 0.25),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,8 +130,12 @@ class _SosActivePill extends StatelessWidget {
                 width: 7,
                 height: 7,
                 margin: const EdgeInsets.only(right: 5),
-                decoration: const BoxDecoration(color: SosColors.red, shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                  color: SosColors.red,
+                  shape: BoxShape.circle,
+                ),
               ),
+
               Text(
                 active ? "SOS Active" : "SOS Ended",
                 style: const TextStyle(
@@ -135,10 +146,15 @@ class _SosActivePill extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 2),
+
           Text(
             timeLabel,
-            style: const TextStyle(color: SosColors.textSecondary, fontSize: 11),
+            style: const TextStyle(
+              color: SosColors.textSecondary,
+              fontSize: 11,
+            ),
           ),
         ],
       ),
