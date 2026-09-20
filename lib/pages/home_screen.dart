@@ -9,28 +9,28 @@ import 'package:safeyatra/services/location_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-  String username = "";
+
   final HomeController controller = HomeController();
+
   @override
   void initState() {
     super.initState();
-    controller.initializeHome(
-      context,
-      () {
-        if (mounted) {
-          setState(() {});
-        }
-      },
-    );
+
+    controller.initializeHome(context, () {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
-  void navigateBottonBar(int index) {
+  void navigateBottomBar(int index) {
     setState(() {
       selectedIndex = index;
     });
@@ -38,60 +38,121 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the text color based on the current theme
+    final Color logoTextColor =
+        Theme.of(context).brightness == Brightness.light
+            ? Colors.black
+            : Colors.white;
+
     final List<Widget> pages = [
       HomePage(
-        usrname:controller.usrname,
-        usrcity:controller.usrcity,
-        usrdistrict:controller.usrdistrict,
-        usrstate:controller.usrstate,
-        usrnation:controller.usrnation,
+        usrname: controller.usrname,
+        usrcity: controller.usrcity,
+        usrdistrict: controller.usrdistrict,
+        usrstate: controller.usrstate,
+        usrnation: controller.usrnation,
         usrscore: controller.usrscore,
-        getLocationDetails:controller.getLocationDetails,
+        getLocationDetails: controller.getLocationDetails,
       ),
+
       Safemap(),
+
       SosPage(
         locality: controller.usrcity,
         district: controller.usrdistrict,
-        coordinates: "${controller.latitude}° N, ${controller.longitude}° E",
+        coordinates:
+            "${controller.latitude}° N, ${controller.longitude}° E",
         onCallEmergency: () {
-          // e.g. url_launcher: launchUrl(Uri.parse("tel:112"));
+          // Add emergency call logic here
+          // Example:
+          // launchUrl(Uri.parse("tel:112"));
         },
       ),
+
       TranslatePage(),
+
       ProfilePage(),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset("assets/logo/icon.png", height: 120),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.shield_outlined,
+              color: Colors.blue,
+              size: 40,
+            ),
+
+            const SizedBox(width: 6),
+
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Safe',
+                    style: TextStyle(
+                      color: logoTextColor,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const TextSpan(
+                    text: 'Yatra',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
         actions: [
           IconButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
+                MaterialPageRoute(
+                  builder: (context) => NotificationPage(),
+                ),
               );
             },
-            icon: Icon(Icons.notifications_outlined),
+            icon: const Icon(
+              Icons.notifications_outlined,
+            ),
           ),
         ],
       ),
-      body: IndexedStack(index: selectedIndex, children: pages),
+
+      body: IndexedStack(
+        index: selectedIndex,
+        children: pages,
+      ),
+
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: selectedIndex,
-        onTap: navigateBottonBar,
+        onTap: navigateBottomBar,
+
         items: [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: "Home",
           ),
-          BottomNavigationBarItem(
+
+          const BottomNavigationBarItem(
             icon: Icon(Icons.map_outlined),
             activeIcon: Icon(Icons.map),
             label: "Safety Map",
           ),
+
           BottomNavigationBarItem(
             icon: Container(
               width: 65,
@@ -103,7 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.call, color: Colors.white, size: 25),
+                  Icon(
+                    Icons.call,
+                    color: Colors.white,
+                    size: 25,
+                  ),
                   Text(
                     "SOS",
                     style: TextStyle(
@@ -117,12 +182,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: "",
           ),
-          BottomNavigationBarItem(
+
+          const BottomNavigationBarItem(
             icon: Icon(Icons.translate_outlined),
             activeIcon: Icon(Icons.translate),
             label: "Translate",
           ),
-          BottomNavigationBarItem(
+
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
             label: "Profile",

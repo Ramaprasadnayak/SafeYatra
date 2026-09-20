@@ -38,7 +38,9 @@ class _GreetingsState extends State<Greetings> {
             Text(
               "Stay aware, stay safe.",
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.white60,
+                color:Theme.of(context).brightness == Brightness.light
+                              ? Colors.black87
+                              : Colors.white60,
                 fontSize: 19,
               ),
             ),

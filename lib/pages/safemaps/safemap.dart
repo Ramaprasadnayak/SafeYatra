@@ -107,14 +107,23 @@ class _SafemapState extends State<Safemap> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: const [0.0, 0.20, 0.40, 0.60, 0.80, 1.0],
-                colors: const [
-                  Color(0xFF060D1E),
-                  Color(0xE6060D1E),
-                  Color(0xA8060D1E),
-                  Color(0x66060D1E),
-                  Color(0x22060D1E),
-                  Color(0x00060D1E),
-                ],
+                colors: Theme.of(context).brightness == Brightness.light
+                    ? const [
+                        Color(0xFFFFFFFF),
+                        Color(0xE6FFFFFF),
+                        Color(0xA8FFFFFF),
+                        Color(0x66FFFFFF),
+                        Color(0x22FFFFFF),
+                        Color(0x00FFFFFF),
+                      ]
+                    : const [
+                        Color(0xFF060D1E),
+                        Color(0xE6060D1E),
+                        Color(0xA8060D1E),
+                        Color(0x66060D1E),
+                        Color(0x22060D1E),
+                        Color(0x00060D1E),
+                      ],
               ),
             ),
             child: Padding(
@@ -129,10 +138,12 @@ class _SafemapState extends State<Safemap> {
                 side: const WidgetStatePropertyAll(
                   BorderSide(color: Colors.blue, width: 2),
                 ),
-                backgroundColor: const WidgetStatePropertyAll(
-                  Color(0xFF0E1827),
+                backgroundColor: WidgetStatePropertyAll(
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.white
+                      : Colors.black45,
                 ),
-                onSubmitted: (val) => {loadBoundary(val)},
+                onSubmitted: (val) => loadBoundary(val),
               ),
             ),
           ),

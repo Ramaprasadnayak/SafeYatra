@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UserLocation extends StatefulWidget {
-  final String? nation,city,district,state;
+  final String? nation, city, district, state;
   final VoidCallback? onChange;
   const UserLocation({
     super.key,
@@ -9,7 +9,7 @@ class UserLocation extends StatefulWidget {
     required this.state,
     required this.district,
     required this.nation,
-    required this.onChange
+    required this.onChange,
   });
 
   @override
@@ -53,7 +53,7 @@ class _UserLocationState extends State<UserLocation> {
                     Text(
                       "Your Current Location",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white60,
+                        // color: Colors.white60,
                         fontSize: 13,
                       ),
                     ),
@@ -67,7 +67,7 @@ class _UserLocationState extends State<UserLocation> {
                     Text(
                       widget.district ?? "Your district",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white60,
+                        // color: Colors.white60,
                         fontSize: 13,
                       ),
                     ),
@@ -76,13 +76,23 @@ class _UserLocationState extends State<UserLocation> {
                         Icon(
                           Icons.location_city_sharp,
                           size: 13,
-                          color: Colors.white60,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.black
+                              : Colors.white60,
                         ),
                         SizedBox(width: 5),
                         Text(
                           "${widget.state}, ${widget.nation}",
                           style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: Colors.white60, fontSize: 13),
+                              ?.copyWith(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.white60,
+                                fontSize: 13,
+                              ),
                         ),
                       ],
                     ),
