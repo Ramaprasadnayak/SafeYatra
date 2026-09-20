@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import './sos_page.dart' show SosColors;
 import 'sos_map_preview.dart';
 
@@ -20,11 +21,13 @@ class SosLocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = SosColors.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: SosColors.card,
+        color: c.card,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: SosColors.cardBorder),
+        border: Border.all(color: c.cardBorder),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -36,8 +39,8 @@ class SosLocationCard extends StatelessWidget {
               Container(
                 width: 44,
                 height: 44,
-                decoration: const BoxDecoration(
-                  color: SosColors.red,
+                decoration: BoxDecoration(
+                  color: c.red,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.location_on, color: Colors.white, size: 22),
@@ -47,15 +50,15 @@ class SosLocationCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Your Current Location",
-                      style: TextStyle(color: SosColors.textSecondary, fontSize: 12),
+                      style: TextStyle(color: c.textSecondary, fontSize: 12),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       locality,
-                      style: const TextStyle(
-                        color: SosColors.textPrimary,
+                      style: TextStyle(
+                        color: c.textPrimary,
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
@@ -63,16 +66,16 @@ class SosLocationCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       district,
-                      style: const TextStyle(color: SosColors.textSecondary, fontSize: 12.5),
+                      style: TextStyle(color: c.textSecondary, fontSize: 12.5),
                     ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.my_location, size: 12, color: SosColors.textSecondary),
+                        Icon(Icons.my_location, size: 12, color: c.textSecondary),
                         const SizedBox(width: 4),
                         Text(
                           coordinates,
-                          style: const TextStyle(color: SosColors.textSecondary, fontSize: 12),
+                          style: TextStyle(color: c.textSecondary, fontSize: 12),
                         ),
                       ],
                     ),
@@ -97,28 +100,23 @@ class SosLocationCard extends StatelessWidget {
     );
   }
 }
+
 class _SosActivePill extends StatelessWidget {
   final bool active;
   final String timeLabel;
 
-  const _SosActivePill({
-    required this.active,
-    required this.timeLabel,
-  });
+  const _SosActivePill({required this.active, required this.timeLabel});
 
   @override
   Widget build(BuildContext context) {
+    final c = SosColors.of(context);
+
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: SosColors.redDark,
+        color: c.redDark,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: SosColors.red.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: c.red.withValues(alpha: 0.4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,31 +128,22 @@ class _SosActivePill extends StatelessWidget {
                 width: 7,
                 height: 7,
                 margin: const EdgeInsets.only(right: 5),
-                decoration: const BoxDecoration(
-                  color: SosColors.red,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: c.red, shape: BoxShape.circle),
               ),
-
               Text(
                 active ? "SOS Active" : "SOS Ended",
-                style: const TextStyle(
-                  color: SosColors.red,
+                style: TextStyle(
+                  color: c.red,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-
           const SizedBox(height: 2),
-
           Text(
             timeLabel,
-            style: const TextStyle(
-              color: SosColors.textSecondary,
-              fontSize: 11,
-            ),
+            style: TextStyle(color: c.textSecondary, fontSize: 11),
           ),
         ],
       ),

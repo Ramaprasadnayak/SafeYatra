@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:safeyatra/themes/app_colors.dart';
 
+import 'package:safeyatra/pages/sos/sos_page.dart' show SosColors;
+
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
-
+  extensions: const [SosColors.light],
   // Background
   scaffoldBackgroundColor: AppColors.lightBackground,
 

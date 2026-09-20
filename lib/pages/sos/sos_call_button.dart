@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
-
 import './sos_page.dart' show SosColors;
 
-/// The big red "CALL 112" call-to-action.
 class SosCallButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const SosCallButton({
-    super.key,
-    required this.onTap,
-  });
+  const SosCallButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    final c = SosColors.of(context);
+
     return Material(
-      color: SosColors.red,
+      color: c.red,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
-            vertical: 16,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
           child: Row(
             children: [
               Container(
@@ -33,15 +27,9 @@ class SosCallButton extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.18),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.call,
-                  color: Colors.white,
-                  size: 22,
-                ),
+                child: const Icon(Icons.call, color: Colors.white, size: 22),
               ),
-
               const SizedBox(width: 14),
-
               const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,25 +43,15 @@ class SosCallButton extends StatelessWidget {
                         letterSpacing: 0.5,
                       ),
                     ),
-
                     SizedBox(height: 2),
-
                     Text(
                       "Connects to India's Emergency Response System",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-
-              const Icon(
-                Icons.chevron_right,
-                color: Colors.white,
-                size: 26,
-              ),
+              const Icon(Icons.chevron_right, color: Colors.white, size: 26),
             ],
           ),
         ),

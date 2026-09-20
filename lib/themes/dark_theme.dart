@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:safeyatra/themes/app_colors.dart';
+import 'package:safeyatra/pages/sos/sos_page.dart' show SosColors;
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-
   // Background
   scaffoldBackgroundColor: AppColors.darkBackground,
-
+  extensions: const [SosColors.dark],
   // AppBar
   appBarTheme: const AppBarTheme(
     backgroundColor: AppColors.darkBackground,
