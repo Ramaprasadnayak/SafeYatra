@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safeyatra/widgets/graph.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SafetyScore extends StatefulWidget {
   final double score;
@@ -10,6 +11,16 @@ class SafetyScore extends StatefulWidget {
 }
 
 class _SafetyScoreState extends State<SafetyScore> {
+  String? status;
+  @override
+  void initState() {
+    super.initState();
+    getSafetyLabel();
+  }
+  Future<void> getSafetyLabel() async{
+    final prefs = await SharedPreferences.getInstance();
+    status=prefs.getString("safety_label");
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -30,33 +41,14 @@ class _SafetyScoreState extends State<SafetyScore> {
               ],
             ),
             Row(children: [RiskGauge(riskScore: widget.score)]),
-            if (widget.score < 50)
-              Text(
-                "Unsafe",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            else if (widget.score < 80)
-              Text(
-                "Moderately Safe",
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            else
-              Text(
-                "Safe",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
+            Text(
+              status ?? "prediction in progress...",
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
               ),
+            ),
             SizedBox(height: 20),
             const Divider(),
             SizedBox(height: 20),
@@ -118,19 +110,19 @@ class _SafetyScoreState extends State<SafetyScore> {
                     Row(
                       children: [
                         Icon(Icons.circle, color: Colors.green, size: 10),
-                        Text(" 80 - 100  Safe"),
+                        Text("Safe"),
                       ],
                     ),
                     Row(
                       children: [
                         Icon(Icons.circle, color: Colors.orange, size: 10),
-                        Text(" 50 - 79  Moderate"),
+                        Text("Moderate"),
                       ],
                     ),
                     Row(
                       children: [
                         Icon(Icons.circle, color: Colors.red, size: 10),
-                        Text(" 0 - 49  Unsafe"),
+                        Text("Unsafe"),
                       ],
                     ),
                   ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:safeyatra/services/get_detail.dart';
 import 'package:safeyatra/services/get_prediction.dart';
 import 'package:safeyatra/services/location.dart';
@@ -25,7 +24,10 @@ class HomeController {
   Future<void> predictDetails(BuildContext context,VoidCallback onUpdate) async {
     final data = await predict(context, usrdistrict);
     if (data == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("safety_label", data["risk_label"]);
     usrscore = (data["safety_score"] as num).toDouble();
+
     print("District: ${data["district_name"]}");
     print("State: ${data["state_name"]}");
     print("Risk Score: ${data["safety_score"]}");

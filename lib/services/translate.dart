@@ -2,12 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-Future<String?> translate(
-  BuildContext context,
-  String source,
-  String target,
-  String mytext,
-) async {
+Future<String?> translate(BuildContext context,String source,String target,String mytext) async {
   try {
     String apiUrl = dotenv.env["apiUrl"]!;
 
