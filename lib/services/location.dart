@@ -60,7 +60,7 @@ Future<String?> getDistrict(
     String apiUrl = dotenv.env["apiUrl"]!;
 
     final response = await http.post(
-      Uri.parse("http://$apiUrl/getdistrict/"),
+      Uri.parse("https://$apiUrl/getdistrict/"),
       headers: {
         "Content-Type": "application/json",
       },

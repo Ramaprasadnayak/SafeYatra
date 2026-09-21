@@ -17,61 +17,76 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
+  final Set<int> _visitedTabs = {0};
 
   final HomeController controller = HomeController();
 
   @override
   void initState() {
     super.initState();
+    controller.initializeHome(context, _refreshUi);
+  }
 
-    controller.initializeHome(context, () {
-      if (mounted) {
-        setState(() {});
-      }
-    });
+  void _refreshUi() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void navigateBottomBar(int index) {
     setState(() {
       selectedIndex = index;
+      _visitedTabs.add(index);
     });
+  }
+
+  Widget _buildPage(int index) {
+    if (!_visitedTabs.contains(index)) {
+      return const SizedBox.shrink();
+    }
+
+    switch (index) {
+      case 0:
+        return HomePage(
+          usrname: controller.usrname,
+          usrcity: controller.usrcity,
+          usrdistrict: controller.usrdistrict,
+          usrstate: controller.usrstate,
+          usrnation: controller.usrnation,
+          usrscore: controller.usrscore,
+          onRefreshLocation: () => controller.refreshLocation(
+            context,
+            _refreshUi,
+          ),
+        );
+      case 1:
+        return Safemap();
+      case 2:
+        return SosPage(
+          locality: controller.usrcity,
+          district: controller.usrdistrict,
+          coordinates: controller.coordinatesLabel,
+          onCallEmergency: () async {
+            await emergency.EmergencyService.callEmergencyWithConfirmation(
+              context,
+            );
+          },
+        );
+      case 3:
+        return TranslatePage();
+      case 4:
+        return ProfilePage();
+      default:
+        return const SizedBox.shrink();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Get the text color based on the current theme
     final Color logoTextColor =
         Theme.of(context).brightness == Brightness.light
             ? Colors.black
             : Colors.white;
-
-    final List<Widget> pages = [
-      HomePage(
-        usrname: controller.usrname,
-        usrcity: controller.usrcity,
-        usrdistrict: controller.usrdistrict,
-        usrstate: controller.usrstate,
-        usrnation: controller.usrnation,
-        usrscore: controller.usrscore,
-        getLocationDetails: controller.getLocationDetails,
-      ),
-
-      Safemap(),
-
-      SosPage(
-        locality: controller.usrcity,
-        district: controller.usrdistrict,
-        coordinates:
-            "${controller.latitude}° N, ${controller.longitude}° E",
-        onCallEmergency: () async {
-          await emergency.EmergencyService.callEmergencyWithConfirmation(context);
-        },
-      ),
-
-      TranslatePage(),
-
-      ProfilePage(),
-    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -83,9 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.blue,
               size: 40,
             ),
-
             const SizedBox(width: 6),
-
             RichText(
               text: TextSpan(
                 children: [
@@ -97,7 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const TextSpan(
                     text: 'Yatra',
                     style: TextStyle(
@@ -111,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-
         actions: [
           IconButton(
             onPressed: () {
@@ -122,36 +133,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            icon: const Icon(
-              Icons.notifications_outlined,
-            ),
+            icon: const Icon(Icons.notifications_outlined),
           ),
         ],
       ),
-
       body: IndexedStack(
         index: selectedIndex,
-        children: pages,
+        children: List.generate(5, _buildPage),
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: selectedIndex,
         onTap: navigateBottomBar,
-
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: "Home",
           ),
-
           const BottomNavigationBarItem(
             icon: Icon(Icons.map_outlined),
             activeIcon: Icon(Icons.map),
             label: "Safety Map",
           ),
-
           BottomNavigationBarItem(
             icon: Container(
               width: 65,
@@ -181,13 +185,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: "",
           ),
-
           const BottomNavigationBarItem(
             icon: Icon(Icons.translate_outlined),
             activeIcon: Icon(Icons.translate),
             label: "Translate",
           ),
-
           const BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),

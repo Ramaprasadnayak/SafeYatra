@@ -23,7 +23,7 @@ Future<Map<String, dynamic>?> predict(BuildContext context, String districtname)
     }
 
     final response = await http.get(
-      Uri.parse("http://$apiUrl/ml/predict/$districtname"),
+      Uri.parse("https://$apiUrl/ml/predict/$districtname"),
       headers: {
         "Content-Type": "application/json",
       },

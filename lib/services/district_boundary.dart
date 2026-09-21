@@ -24,7 +24,7 @@ Future<Map<String, dynamic>?> getDistrictBoundaries(String distname, BuildContex
 
     final response = await http.get(
       Uri.parse(
-        "http://$apiUrl/api/districts/$distname/coordinates",
+        "https://$apiUrl/api/districts/$distname/coordinates",
       ),
       headers: {
         "Content-Type": "application/json",

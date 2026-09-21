@@ -23,7 +23,7 @@ Future<String?> translate(BuildContext context, String source, String target, St
     }
 
     final response = await http.post(
-      Uri.parse("http://$apiUrl/translate/"),
+      Uri.parse("https://$apiUrl/translate/"),
       headers: {
         "Content-Type": "application/json",
       },

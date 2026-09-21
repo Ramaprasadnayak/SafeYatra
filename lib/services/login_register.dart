@@ -37,7 +37,7 @@ Future<void> register(String username,String email,String password,BuildContext 
     }
 
     final response = await http.post(
-      Uri.parse("http://$apiUrl/auth/register"),
+      Uri.parse("https://$apiUrl/auth/register"),
       headers: {
         "Content-Type": "application/json",
       },
@@ -132,7 +132,7 @@ Future<bool> verifyuser(String username,BuildContext context) async {
     }
 
     final response = await http.post(
-      Uri.parse("http://$apiUrl/auth/verifyuser"),
+      Uri.parse("https://$apiUrl/auth/verifyuser"),
       headers: {
         "Content-Type": "application/json",
       },

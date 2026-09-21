@@ -35,7 +35,10 @@ migrate_working_dir/
 
 # Symbolication related
 app.*.symbols
-
+.venv/
+__pycache__/
+.env
+serviceAccountKey.json
 # Obfuscation related
 app.*.map.json
 
