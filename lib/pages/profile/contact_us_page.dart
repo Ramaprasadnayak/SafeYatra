@@ -9,8 +9,8 @@ class ContactUsPage extends StatefulWidget {
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
-  static const _supportEmail = 'support@safeyatra.com';
-  static const _supportPhone = '+910000000000';
+  static const _supportEmail = 'safeyatra.support@gmail.com';
+  // static const _supportPhone = '+910000000000';
 
   final _subjectCtrl = TextEditingController();
   final _messageCtrl = TextEditingController();
@@ -65,13 +65,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     title: const Text('Email us'),
                     subtitle: const Text(_supportEmail),
                     onTap: () => _open(Uri.parse('mailto:$_supportEmail')),
-                  ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.call_rounded),
-                    title: const Text('Call us'),
-                    subtitle: const Text(_supportPhone),
-                    onTap: () => _open(Uri.parse('tel:$_supportPhone')),
+                  // ),
+                  // const Divider(height: 1),
+                  // ListTile(
+                  //   leading: const Icon(Icons.call_rounded),
+                  //   title: const Text('Call us'),
+                  //   subtitle: const Text(_supportPhone),
+                  //   onTap: () => _open(Uri.parse('tel:$_supportPhone')),
                   ),
                 ],
               ),

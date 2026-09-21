@@ -20,53 +20,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void validateInput() async{
-      if (usrname.text.isEmpty || password.text.isEmpty) {
+    void validateInput() async {
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      final trimmedUsername = usrname.text.trim();
+      final trimmedEmail = email.text.trim();
+      final trimmedPassword = password.text.trim();
+
+      if (trimmedUsername.isEmpty || trimmedEmail.isEmpty || trimmedPassword.isEmpty) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Textfield cant be empty"),
+            content: Text("All fields are required"),
             duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      else if (usrname.text.trim().length < 8 || password.text.trim().length < 8) {
+
+      if (trimmedUsername.length < 3) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Must contain at least 8 characters"),
+            content: Text("Username must be at least 3 characters"),
             duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      else if (!email.text.trim().endsWith("@gmail.com")) {
+
+      if (!emailRegex.hasMatch(trimmedEmail)) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("gmail must end with @gmail.com"),
+            content: Text("Please enter a valid email address"),
             duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      // else if(! await verifyuser(usrname.text.trim(), context)){
-      //   if(!context.mounted) return;
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text("username already taken!"),
-      //       duration: Duration(seconds: 2),
-      //     ),
-      //   );
-      // }
-      else{
-        register(usrname.text.trim(),email.text.trim(),password.text.trim(),context);
-        // if(!context.mounted) return;
-        // Navigator.push(
-        //   context, 
-        //   MaterialPageRoute(
-        //     builder: (context)=>PhonePage(
-        //       usrname:usrname.text.trim(),
-        //       email:email.text.trim(),
-        //       password:password.text.trim(),
-        //       context:context
-        // )));
+
+      if (trimmedPassword.length < 8) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Password must be at least 8 characters"),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
       }
+
+      register(trimmedUsername, trimmedEmail, trimmedPassword, context);
     }
     return Scaffold(
       appBar: AppBar(

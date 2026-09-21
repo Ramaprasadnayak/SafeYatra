@@ -4,12 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SafetyScore extends StatefulWidget {
   final double score;
-  const SafetyScore({super.key, required this.score});
-
+  const SafetyScore({
+    super.key,
+    required this.score,
+  });
   @override
   State<SafetyScore> createState() => _SafetyScoreState();
 }
-
 class _SafetyScoreState extends State<SafetyScore> {
   String? status;
   @override
@@ -17,12 +18,36 @@ class _SafetyScoreState extends State<SafetyScore> {
     super.initState();
     getSafetyLabel();
   }
-  Future<void> getSafetyLabel() async{
+  Future<void> getSafetyLabel() async {
     final prefs = await SharedPreferences.getInstance();
-    status=prefs.getString("safety_label");
+    final safetyLabel = prefs.getString("safety_label");
+    if (!mounted) return;
+    setState(() {
+      status = safetyLabel;
+    });
+  }
+  Color getStatusColor() {
+    if (status == "High") {
+      return Colors.red;
+    } else if (status == "Moderate") {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
+  }
+  String getSafetyLevel() {
+    if (status == "High") {
+      return "Unsafe";
+    } else if (status == "Moderate") {
+      return "Moderate";
+    } else {
+      return "Safe";
+    }
   }
   @override
   Widget build(BuildContext context) {
+    final statusColor = getStatusColor();
+    final safetyLevel = getSafetyLevel();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -32,26 +57,33 @@ class _SafetyScoreState extends State<SafetyScore> {
               children: [
                 Card(
                   shape: const CircleBorder(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(15.0),
                     child: Icon(Icons.auto_awesome_outlined),
                   ),
                 ),
-                Text("AI Safety Score"),
+                const SizedBox(width: 10),
+                const Text("AI Safety Score"),
               ],
             ),
-            Row(children: [RiskGauge(riskScore: widget.score)]),
+            Row(
+              children: [
+                RiskGauge(
+                  riskScore: widget.score,
+                ),
+              ],
+            ),
             Text(
-              status ?? "prediction in progress...",
+              status ?? "Prediction in progress...",
               style: TextStyle(
-                color: Colors.red,
+                color: statusColor,
                 fontSize: 17,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Divider(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -62,66 +94,65 @@ class _SafetyScoreState extends State<SafetyScore> {
                       children: [
                         Text(
                           "Safety Level: ",
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(fontSize: 17),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontSize: 17),
                         ),
-                        if (widget.score < 50)
-                          Text(
-                            "Unsafe",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        else if (widget.score < 80)
-                          Text(
-                            "Moderate",
-                            style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        else
-                          Text(
-                            "Safe",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Text(
+                          safetyLevel,
+                          style: TextStyle(
+                            color: statusColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    // OutlinedButton(onPressed: () {}, child: Text("View Details")),
+
+                    const SizedBox(height: 10),
                   ],
                 ),
+
                 const VerticalDivider(
                   color: Colors.white24,
                   thickness: 1,
                   width: 20,
                 ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Row(
                       children: [
-                        Icon(Icons.circle, color: Colors.green, size: 10),
+                        Icon(
+                          Icons.circle,
+                          color: Colors.green,
+                          size: 10,
+                        ),
+                        SizedBox(width: 5),
                         Text("Safe"),
                       ],
                     ),
                     Row(
                       children: [
-                        Icon(Icons.circle, color: Colors.orange, size: 10),
+                        Icon(
+                          Icons.circle,
+                          color: Colors.orange,
+                          size: 10,
+                        ),
+                        SizedBox(width: 5),
                         Text("Moderate"),
                       ],
                     ),
                     Row(
                       children: [
-                        Icon(Icons.circle, color: Colors.red, size: 10),
+                        Icon(
+                          Icons.circle,
+                          color: Colors.red,
+                          size: 10,
+                        ),
+                        SizedBox(width: 5),
                         Text("Unsafe"),
                       ],
                     ),

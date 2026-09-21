@@ -19,32 +19,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void validateInput(){
-      if (email.text.isEmpty || password.text.isEmpty) {
+    void validateInput() {
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      final trimmedEmail = email.text.trim();
+      final trimmedPassword = password.text.trim();
+
+      if (trimmedEmail.isEmpty || trimmedPassword.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Textfield cant be empty"),
+            content: Text("All fields are required"),
             duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      else if (email.text.trim().length < 6 || password.text.trim().length < 6) {
+
+      if (!emailRegex.hasMatch(trimmedEmail)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Must contain at least 6 characters"),
+            content: Text("Please enter a valid email address"),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      else if (!email.text.trim().endsWith("@gmail.com")) {
+
+      if (trimmedPassword.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Invalid email"),
+            content: Text("Password must be at least 6 characters"),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      else{
-        login(email.text.trim(), password.text.trim(),context);
-      }
+
+      login(trimmedEmail, trimmedPassword, context);
     }
     return Scaffold(
       appBar: AppBar(

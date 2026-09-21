@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:safeyatra/core/constants/map_style.dart';
 import 'package:safeyatra/pages/safemaps/notice_menu.dart';
 import 'package:safeyatra/services/district_boundary.dart';
+import 'package:safeyatra/services/get_prediction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Safemap extends StatefulWidget {
@@ -12,8 +13,10 @@ class Safemap extends StatefulWidget {
 }
 
 class _SafemapState extends State<Safemap> {
-  double latitude = 13.0688;
-  double longitude = 74.9936;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  Color mycolor= Colors.blue.withValues(alpha: 0.25);
+  String? status;
   bool isLoading = true;
   late GoogleMapController _controller;
   Set<Polygon> _polygons = {};
@@ -24,12 +27,36 @@ class _SafemapState extends State<Safemap> {
     super.initState();
     _loadLocation();
   }
-
+  Future<void> prediction(String usrdistrict) async {
+    final data = await predict(context, usrdistrict);
+    if (data == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("No safety data available for this district"),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    setState(() {
+      status = data["risk_label"] as String;
+    });
+  }
   Future<void> _loadLocation() async {
     final prefs = await SharedPreferences.getInstance();
-    latitude = prefs.getDouble("latitude") ?? 13.0688;
-    longitude = prefs.getDouble("longitude") ?? 74.9936;
-    // goToLocation(latitude, longitude);
+    final savedLatitude = prefs.getDouble("latitude");
+    final savedLongitude = prefs.getDouble("longitude");
+
+    if (savedLatitude != null && savedLongitude != null) {
+      latitude = savedLatitude;
+      longitude = savedLongitude;
+    } else {
+      // Use India's center as fallback when no location is cached
+      latitude = 20.5937;
+      longitude = 78.9629;
+    }
+
     setState(() {
       isLoading = false;
     });
@@ -42,11 +69,13 @@ class _SafemapState extends State<Safemap> {
   }
 
   void loadBoundary(String distcode) async {
+    final statusColor = getStatusColor();
     final result = await getDistrictBoundaries(distcode, context);
     if (result != null) {
       final boundaries = result["boundaries"] as List<List<LatLng>>;
       final matchedName = result["matchedDistrict"] as String;
       final center = result["center"] as Map<String, dynamic>;
+      prediction(matchedName);
       final coordinates = center["coordinates"] as List<dynamic>;
       final double longitude = (coordinates[0] as num).toDouble();
       final double latitude = (coordinates[1] as num).toDouble();
@@ -55,7 +84,7 @@ class _SafemapState extends State<Safemap> {
           polygonId: PolygonId("district_${entry.key}"),
           points: entry.value,
           strokeWidth: 2,
-          fillColor: Colors.blue.withValues(alpha: 0.25),
+          fillColor: statusColor,
         );
       }).toSet();
       setState(() {
@@ -64,6 +93,18 @@ class _SafemapState extends State<Safemap> {
       });
       goToLocation(latitude, longitude);
       loadDownMenu(_district);
+    }
+  }
+  Color getStatusColor() {
+    if (status == "High") {
+      return Colors.red;
+    } else if (status == "Moderate") {
+      return Colors.orange;
+    } else if (status == "Low"){
+      return Colors.green;
+    }
+    else{
+      return Colors.grey;
     }
   }
 

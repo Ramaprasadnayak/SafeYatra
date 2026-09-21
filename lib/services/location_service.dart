@@ -13,25 +13,25 @@ class HomeController {
   String usrdistrict = "your district";
   String usrstate = "your state";
   String usrnation = "your nation";
-  double usrscore = 0,latitude=13.0688,longitude= 74.9936;
+  double usrscore = 0;
+  double latitude = 0.0;
+  double longitude = 0.0;
 
   Future<void> initializeHome(BuildContext context,VoidCallback onUpdate) async {
     await loadCachedLocation(onUpdate);
+    if (!context.mounted) return;
     await getLocationDetails(context, onUpdate);
+    if (!context.mounted) return;
     await loadDetails(context, onUpdate);
+    if (!context.mounted) return;
     await predictDetails(context, onUpdate);
   }
   Future<void> predictDetails(BuildContext context,VoidCallback onUpdate) async {
     final data = await predict(context, usrdistrict);
     if (data == null) return;
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString("safety_label", data["risk_label"]);
+    await prefs.setString("safety_label", data["risk_label"]);
     usrscore = (data["safety_score"] as num).toDouble();
-
-    print("District: ${data["district_name"]}");
-    print("State: ${data["state_name"]}");
-    print("Risk Score: ${data["safety_score"]}");
-    print("Risk Label: ${data["risk_label"]}");
     onUpdate();
   }
   Future<void> loadDetails(BuildContext context,VoidCallback onUpdate) async {
@@ -55,16 +55,16 @@ class HomeController {
     try {
       final prefs = await SharedPreferences.getInstance();
       Position position = await getCurrentPosition();
-      // latitude=position.latitude;
-      // longitude=position.longitude;
+      latitude = position.latitude;
+      longitude = position.longitude;
+
+      if (!context.mounted) return;
+
       List<Placemark> places = await geocoding.placemarkFromCoordinates(
-        13.0688,
-        74.9936,
-        // position.latitude,
-        // position.longitude,
+        position.latitude,
+        position.longitude,
       );
       if (places.isEmpty) {
-        print("No location information found");
         return;
       }
       await prefs.setDouble("latitude", position.latitude);
@@ -75,12 +75,11 @@ class HomeController {
       String? district =prefs.getString("district") ?? "your district";
       if (currentCity != districtSyncedCity) {
         if (await isConnected()) {
+          if (!context.mounted) return;
           district = await getDistrict(
             context,
-            13.0688,
-            74.9936,
-            // position.latitude,
-            // position.longitude,
+            position.latitude,
+            position.longitude,
           );
           if (district != null && district.isNotEmpty) {
             await prefs.setString(
@@ -100,7 +99,8 @@ class HomeController {
       usrnation = place.country ?? usrnation;
       onUpdate();
     } catch (e) {
-      print("Location error: $e");
+      // Silently fail - location updates are not critical to app function
+      // User will see cached/default location values
     }
   }
 }

@@ -8,14 +8,34 @@ import 'dart:convert';
 
 Future<void> register(String username,String email,String password,BuildContext context) async {
   try {
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-    final user=userCredential.user;
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    final user = userCredential.user;
     if (user == null) {
-      if(!context.mounted) return;
-      ScaffoldMessenger.of(context,).showSnackBar(const SnackBar(content: Text("couldnt register")));
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Registration failed. Please try again."),
+          backgroundColor: Colors.red,
+        ),
+      );
       return;
     }
-    String apiUrl = dotenv.env["apiUrl"]!;
+
+    String? apiUrl = dotenv.env["apiUrl"];
+    if (apiUrl == null || apiUrl.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Configuration error. Please contact support."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     final response = await http.post(
       Uri.parse("http://$apiUrl/auth/register"),
       headers: {
@@ -24,31 +44,92 @@ Future<void> register(String username,String email,String password,BuildContext 
       body: jsonEncode({
         "firebaseid": user.uid,
         "username": username,
-        "email":user.email,
+        "email": user.email,
       }),
-    );
-    final data = jsonDecode(response.body);
-    if (response.statusCode == 200 && data["message"] == "User registered") {
-      if(!context.mounted) return;
-      ScaffoldMessenger.of(context,).showSnackBar(const SnackBar(content: Text("register sucessful.")));
-     
-    }
-    if(!context.mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    ).timeout(
+      const Duration(seconds: 15),
+      onTimeout: () {
+        throw Exception("Request timeout. Please check your connection.");
+      },
     );
 
+    if (!context.mounted) return;
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data["message"] == "User registered") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Registration successful!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data["message"] ?? "Registration failed"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Server error: ${response.statusCode}"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   } on FirebaseAuthException catch (e) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Invalid credential.")));
+    if (!context.mounted) return;
+    String errorMessage;
+    switch (e.code) {
+      case 'email-already-in-use':
+        errorMessage = "This email is already registered.";
+        break;
+      case 'weak-password':
+        errorMessage = "Password is too weak.";
+        break;
+      case 'invalid-email':
+        errorMessage = "Invalid email format.";
+        break;
+      default:
+        errorMessage = "Authentication error: ${e.message}";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        backgroundColor: Colors.red,
+      ),
+    );
+  } on Exception catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error: ${e.toString()}"),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 }
 
 Future<bool> verifyuser(String username,BuildContext context) async {
   try {
-    String apiUrl = dotenv.env["apiUrl"]!;
+    String? apiUrl = dotenv.env["apiUrl"];
+    if (apiUrl == null || apiUrl.isEmpty) {
+      if (!context.mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Configuration error. Please contact support."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
 
     final response = await http.post(
       Uri.parse("http://$apiUrl/auth/verifyuser"),
@@ -58,19 +139,26 @@ Future<bool> verifyuser(String username,BuildContext context) async {
       body: jsonEncode({
         "username": username
       }),
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw Exception("Request timeout");
+      },
     );
-    final data = jsonDecode(response.body);
-    if (response.statusCode == 200 && data["message"] == "Unique user") {
-      return true;
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data["message"] == "Unique user";
     }
-    else {
-      return false;
-    }
+    return false;
   } on Exception catch (e) {
-    if(!context.mounted) return false;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    if (!context.mounted) return false;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error verifying username: ${e.toString()}"),
+        backgroundColor: Colors.red,
+      ),
+    );
     return false;
   }
 }
@@ -78,19 +166,54 @@ Future<bool> verifyuser(String username,BuildContext context) async {
 
 Future<void> login(String email, String password, BuildContext context) async {
   try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-    
-    if(!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("login sucessfull")));
-    Navigator.push(
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Login successful!"),
+        backgroundColor: Colors.green,
+      ),
+    );
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
   } on FirebaseAuthException catch (e) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Invalid credential.")));
+    if (!context.mounted) return;
+    String errorMessage;
+    switch (e.code) {
+      case 'user-not-found':
+        errorMessage = "No account found with this email.";
+        break;
+      case 'wrong-password':
+        errorMessage = "Incorrect password.";
+        break;
+      case 'invalid-email':
+        errorMessage = "Invalid email format.";
+        break;
+      case 'user-disabled':
+        errorMessage = "This account has been disabled.";
+        break;
+      default:
+        errorMessage = "Authentication error: ${e.message}";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        backgroundColor: Colors.red,
+      ),
+    );
+  } on Exception catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Login failed: ${e.toString()}"),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 }

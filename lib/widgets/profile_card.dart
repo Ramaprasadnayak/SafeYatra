@@ -27,6 +27,7 @@ class MyCard extends StatelessWidget {
                 Icon(prefixIcon, size: 30,),
                 const SizedBox(width: 16),
                 Expanded(child: Text(text)),
+                Icon(Icons.arrow_forward_ios)
               ],
             ),
           ),

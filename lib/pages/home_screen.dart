@@ -6,6 +6,7 @@ import 'package:safeyatra/pages/profile/profile_page.dart';
 import 'package:safeyatra/pages/safemaps/safemap.dart';
 import 'package:safeyatra/pages/translate/translate_page.dart';
 import 'package:safeyatra/services/location_service.dart';
+import 'package:safeyatra/services/emergency_service.dart' as emergency;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,10 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
         district: controller.usrdistrict,
         coordinates:
             "${controller.latitude}° N, ${controller.longitude}° E",
-        onCallEmergency: () {
-          // Add emergency call logic here
-          // Example:
-          // launchUrl(Uri.parse("tel:112"));
+        onCallEmergency: () async {
+          await emergency.EmergencyService.callEmergencyWithConfirmation(context);
         },
       ),
 
