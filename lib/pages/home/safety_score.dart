@@ -27,21 +27,19 @@ class _SafetyScoreState extends State<SafetyScore> {
     });
   }
   Color getStatusColor() {
-    if (status == "High") {
-      return Colors.red;
-    } else if (status == "Moderate") {
-      return Colors.orange;
-    } else {
-      return Colors.green;
+    switch (status) {
+      case "High":return Colors.red;
+      case "Moderate":return Colors.orange;
+      case "Low":return Colors.green;
+      default:return Colors.grey;
     }
   }
   String getSafetyLevel() {
-    if (status == "High") {
-      return "Unsafe";
-    } else if (status == "Moderate") {
-      return "Moderate";
-    } else {
-      return "Safe";
+    switch (status) {
+      case "High":return "Unsafe";
+      case "Moderate":return "Moderate";
+      case "Low":return "Safe";
+      default:return "";
     }
   }
   @override
@@ -50,113 +48,126 @@ class _SafetyScoreState extends State<SafetyScore> {
     final safetyLevel = getSafetyLevel();
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Card(
                   shape: const CircleBorder(),
                   child: const Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Icon(Icons.auto_awesome_outlined),
+                    padding: EdgeInsets.all(12.0),
+                    child: Icon(
+                      Icons.auto_awesome_outlined,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                const Text("AI Safety Score"),
-              ],
-            ),
-            Row(
-              children: [
-                RiskGauge(
-                  riskScore: widget.score,
+                const Text(
+                  "AI Safety Score",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
-            Text(
-              status ?? "Prediction in progress...",
-              style: TextStyle(
-                color: statusColor,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 10),
+            Center(
+              child: RiskGauge(
+                riskScore: widget.score,
               ),
             ),
+            const SizedBox(height: 10),
+            if (status != null && safetyLevel.isNotEmpty)
+              Text(
+                safetyLevel,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: statusColor,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             const SizedBox(height: 20),
             const Divider(),
             const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Safety Level: ",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontSize: 17),
+                Expanded(
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Safety Level",
+                        style: TextStyle(
+                          fontSize: 15,
                         ),
+                      ),
+                      const SizedBox(height: 6),
+                      if (status != null && safetyLevel.isNotEmpty)
                         Text(
                           safetyLevel,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: statusColor,
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-                  ],
+                    ],
+                  ),
                 ),
-
-                const VerticalDivider(
+                Container(
+                  height: 65,
+                  width: 1,
                   color: Colors.white24,
-                  thickness: 1,
-                  width: 20,
                 ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          color: Colors.green,
-                          size: 10,
-                        ),
-                        SizedBox(width: 5),
-                        Text("Safe"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          color: Colors.orange,
-                          size: 10,
-                        ),
-                        SizedBox(width: 5),
-                        Text("Moderate"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          color: Colors.red,
-                          size: 10,
-                        ),
-                        SizedBox(width: 5),
-                        Text("Unsafe"),
-                      ],
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Row(
+                        children: [
+                          SizedBox(width:20),
+                          Icon(
+                            Icons.circle,
+                            color: Colors.green,
+                            size: 10,
+                          ),
+                          SizedBox(width: 6),
+                          Text("Safe"),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          SizedBox(width:20),
+                          Icon(
+                            Icons.circle,
+                            color: Colors.orange,
+                            size: 10,
+                          ),
+                          SizedBox(width: 6),
+                          Text("Moderate"),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          SizedBox(width:20),
+                          Icon(
+                            Icons.circle,
+                            color: Colors.red,
+                            size: 10,
+                          ),
+                          SizedBox(width: 6),
+                          Text("Unsafe"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

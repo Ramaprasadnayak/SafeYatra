@@ -33,7 +33,6 @@ class _NoticeMenuState extends State<NoticeMenu> {
   @override
   Widget build(BuildContext context) {
     final statusColor = getStatusColor();
-
     return Container(
       color: const Color(0xFF101726),
       padding: const EdgeInsets.all(20),
@@ -51,7 +50,6 @@ class _NoticeMenuState extends State<NoticeMenu> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // District header
               Row(
                 children: [
                   Container(
@@ -66,9 +64,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                       size: 28,
                     ),
                   ),
-
                   const SizedBox(width: 16),
-
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,9 +77,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-
                         const SizedBox(height: 4),
-
                         const Row(
                           children: [
                             Icon(
@@ -106,10 +100,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
-
-              // Safety information
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -121,7 +112,6 @@ class _NoticeMenuState extends State<NoticeMenu> {
                 ),
                 child: Row(
                   children: [
-                    // Safety Score
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,9 +123,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                               fontSize: 13,
                             ),
                           ),
-
                           const SizedBox(height: 6),
-
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -165,16 +153,12 @@ class _NoticeMenuState extends State<NoticeMenu> {
                         ],
                       ),
                     ),
-
                     Container(
                       width: 1,
                       height: 55,
                       color: Colors.white12,
                     ),
-
                     const SizedBox(width: 20),
-
-                    // Risk Label
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,9 +170,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                               fontSize: 13,
                             ),
                           ),
-
                           const SizedBox(height: 8),
-
                           Row(
                             children: [
                               Container(
@@ -199,9 +181,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                                   shape: BoxShape.circle,
                                 ),
                               ),
-
                               const SizedBox(width: 8),
-
                               Flexible(
                                 child: Text(
                                   "${widget.safetyLabel} Risk",
@@ -220,10 +200,7 @@ class _NoticeMenuState extends State<NoticeMenu> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // Safety message
               Row(
                 children: [
                   Icon(
