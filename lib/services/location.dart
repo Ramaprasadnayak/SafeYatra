@@ -11,34 +11,24 @@ Future<bool> isConnected() async {
          result.contains(ConnectivityResult.mobile) ||
          result.contains(ConnectivityResult.ethernet);
 }
-
 Future<Position> getCurrentPosition() async {
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
   if (!serviceEnabled) {
     await Geolocator.openLocationSettings();
-
-    // Check again after returning from settings
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
     if (!serviceEnabled) {
       throw Exception('Please enable location services.');
     }
   }
-
   LocationPermission permission = await Geolocator.checkPermission();
-
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
   }
-
   if (permission == LocationPermission.denied) {
     throw Exception('Location permission denied.');
   }
-
   if (permission == LocationPermission.deniedForever) {
     await Geolocator.openAppSettings();
-
     throw Exception(
       'Location permission permanently denied. '
       'Please enable it from Settings.',
@@ -51,6 +41,7 @@ Future<Position> getCurrentPosition() async {
     ),
   );
 }
+
 Future<String?> getDistrict(
   BuildContext context,
   double latitude,
@@ -76,7 +67,8 @@ Future<String?> getDistrict(
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 200 &&
-        data["message"] == "retrived district") {
+        data["message"] == "Retrieved district") {
+
       print("District received: ${data["district"]}");
       return data["district"];
     }

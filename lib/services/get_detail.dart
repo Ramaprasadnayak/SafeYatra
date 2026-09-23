@@ -46,8 +46,6 @@ Future<Map<String, dynamic>?> getUserInfo(BuildContext context) async {
     final uri = Uri.parse("https://$apiUrl/auth/getinfo");
 
     var response = await _authorizedGet(user, uri);
-
-    // Cached token rejected (expired/revoked) -> retry once with a fresh one.
     if (response.statusCode == 401) {
       response = await _authorizedGet(user, uri, forceRefresh: true);
     }
