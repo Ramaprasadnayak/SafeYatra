@@ -238,7 +238,6 @@ class _SafemapState extends State<Safemap> {
                       ? Colors.white
                       : Colors.black45,
                 ),
-
                 onSubmitted: (value) {
                   loadBoundary(value);
                 },
