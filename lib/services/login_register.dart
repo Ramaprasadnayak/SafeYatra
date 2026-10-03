@@ -5,13 +5,50 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
-
-Future<void> register(String username,String email,String password,BuildContext context) async {
+Future<void> register(String username,String email,String phno,String password,BuildContext context) async {
   try {
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
+    final apiUrl = dotenv.env["apiUrl"];
+
+    if (apiUrl == null || apiUrl.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Configuration error. Please contact support."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    final usrRes = await http.get(Uri.parse(
+        "https://$apiUrl/auth/verifyusr/${Uri.encodeComponent(username)}",
+      ),
+      headers: {"Content-Type": "application/json"},
     );
+
+    if (usrRes.statusCode != 200) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Unable to verify username. Server error: ${usrRes.statusCode}",
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    final usrData = jsonDecode(usrRes.body);
+    if (usrData["exists"] == true) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Username already exists"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
     final user = userCredential.user;
     if (user == null) {
       if (!context.mounted) return;
@@ -23,67 +60,42 @@ Future<void> register(String username,String email,String password,BuildContext 
       );
       return;
     }
-
-    String? apiUrl = dotenv.env["apiUrl"];
-    if (apiUrl == null || apiUrl.isEmpty) {
-      if (!context.mounted) return;
+    final response = await http.post(
+          Uri.parse("https://$apiUrl/auth/register"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({
+            "firebaseid": user.uid,
+            "username": username,
+            "phno": phno,
+            "email": user.email,
+          }),
+        ).timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {
+            throw Exception("Request timeout. Please check your connection.");
+          },
+        );
+    if (!context.mounted) return;
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200 && data["message"] == "User registered") {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Configuration error. Please contact support."),
-          backgroundColor: Colors.red,
+          content: Text("Registration successful!"),
+          backgroundColor: Colors.green,
         ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
       return;
     }
-
-    final response = await http.post(
-      Uri.parse("https://$apiUrl/auth/register"),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "firebaseid": user.uid,
-        "username": username,
-        "email": user.email,
-      }),
-    ).timeout(
-      const Duration(seconds: 15),
-      onTimeout: () {
-        throw Exception("Request timeout. Please check your connection.");
-      },
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(data["message"] ?? "Registration failed"),
+        backgroundColor: Colors.red,
+      ),
     );
-
-    if (!context.mounted) return;
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data["message"] == "User registered") {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Registration successful!"),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(data["message"] ?? "Registration failed"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Server error: ${response.statusCode}"),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   } on FirebaseAuthException catch (e) {
     if (!context.mounted) return;
     String errorMessage;
@@ -97,17 +109,18 @@ Future<void> register(String username,String email,String password,BuildContext 
       case 'invalid-email':
         errorMessage = "Invalid email format.";
         break;
+      case 'network-request-failed':
+        errorMessage = "Network error. Check your internet connection.";
+        break;
       default:
-        errorMessage = "Authentication error: ${e.message}";
+        errorMessage = e.message ?? "Authentication error occurred.";
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
     );
   } on Exception catch (e) {
     if (!context.mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Error: ${e.toString()}"),
@@ -117,7 +130,7 @@ Future<void> register(String username,String email,String password,BuildContext 
   }
 }
 
-Future<bool> verifyuser(String username,BuildContext context) async {
+Future<bool> verifyuser(String username, BuildContext context) async {
   try {
     String? apiUrl = dotenv.env["apiUrl"];
     if (apiUrl == null || apiUrl.isEmpty) {
@@ -131,20 +144,18 @@ Future<bool> verifyuser(String username,BuildContext context) async {
       return false;
     }
 
-    final response = await http.post(
-      Uri.parse("https://$apiUrl/auth/verifyuser"),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "username": username
-      }),
-    ).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () {
-        throw Exception("Request timeout");
-      },
-    );
+    final response = await http
+        .post(
+          Uri.parse("https://$apiUrl/auth/verifyuser"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({"username": username}),
+        )
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            throw Exception("Request timeout");
+          },
+        );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -162,7 +173,6 @@ Future<bool> verifyuser(String username,BuildContext context) async {
     return false;
   }
 }
-
 
 Future<void> login(String email, String password, BuildContext context) async {
   try {
@@ -202,10 +212,7 @@ Future<void> login(String email, String password, BuildContext context) async {
         errorMessage = "Authentication error: ${e.message}";
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
     );
   } on Exception catch (e) {
     if (!context.mounted) return;
