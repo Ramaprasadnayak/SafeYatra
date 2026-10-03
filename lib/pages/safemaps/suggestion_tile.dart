@@ -3,52 +3,50 @@ import 'package:flutter/material.dart';
 class SuggestionTile extends StatelessWidget {
   final String suggestion;
   final String query;
+  final bool highlighted;
   final VoidCallback onTap;
-  final VoidCallback onFill;
 
   const SuggestionTile({
     super.key,
     required this.suggestion,
     required this.query,
+    required this.highlighted,
     required this.onTap,
-    required this.onFill,
   });
 
   @override
   Widget build(BuildContext context) {
-    final baseStyle = DefaultTextStyle.of(context).style.copyWith(
-          fontSize: 16,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+    final scheme = Theme.of(context).colorScheme;
+    final style = TextStyle(fontSize: 16, color: scheme.onSurface);
+    const bold = TextStyle(fontWeight: FontWeight.bold);
 
-    // Typed part = normal, the rest = bold (like the screenshot)
-    final start = suggestion.toLowerCase().indexOf(query.trim().toLowerCase());
-    final end = start + query.trim().length;
+    final q = query.trim();
+    final start = q.isEmpty ? -1 : suggestion.toLowerCase().indexOf(q.toLowerCase());
 
     final TextSpan text = start < 0
-        ? TextSpan(
-            text: suggestion,
-            style: baseStyle.copyWith(fontWeight: FontWeight.bold))
+        ? TextSpan(text: suggestion, style: style.merge(bold))
         : TextSpan(
-            style: baseStyle,
+            style: style,
             children: [
-              TextSpan(text: suggestion.substring(0, start),
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: suggestion.substring(start, end)),
-              TextSpan(text: suggestion.substring(end),
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: suggestion.substring(0, start), style: bold),
+              TextSpan(text: suggestion.substring(start, start + q.length)),
+              TextSpan(text: suggestion.substring(start + q.length), style: bold),
             ],
           );
 
-    return ListTile(
-      leading: const Icon(Icons.search),
-      title: RichText(text: text),
-      trailing: IconButton(
-        icon: const Icon(Icons.north_west, size: 20),
-        tooltip: 'Use this suggestion',
-        onPressed: onFill,
-      ),
+    return InkWell(
       onTap: onTap,
+      child: Container(
+        color: highlighted ? scheme.onSurface.withValues(alpha: 0.08) : null,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Row(
+          children: [
+            Icon(Icons.search, size: 20, color: scheme.onSurface),
+            const SizedBox(width: 12),
+            Expanded(child: RichText(text: text, overflow: TextOverflow.ellipsis)),
+          ],
+        ),
+      ),
     );
   }
 }
