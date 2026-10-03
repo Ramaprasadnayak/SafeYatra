@@ -2,17 +2,14 @@
 // Total unique districts: 360
 
 const List<String> districts = [
-  // "Agar-Malwa",
-  "Ahmadabad",
-  "Ahmednagar",
-  "Aizawl",
+  "Ahmadabad", // tested
+  "Ahmednagar", // tested
+  "Aizawl", // tested
   "Aligarh",
-  // "Alipurduar",
   "Almora",
   "Alwar",
   "Ambala",
   "Amritsar",
-  // "Amroha",
   "Anjaw",
   "Anugul",
   "Anuppur",
@@ -35,7 +32,7 @@ const List<String> districts = [
   "Barpeta",
   "Begusarai",
   "Belagavi",
-  "Bengaluru Urban",
+  // "Bengaluru Urban", //no prediction
   "Betul",
   "Bhadrak",
   "Bhagalpur",
@@ -62,14 +59,13 @@ const List<String> districts = [
   "Chennai",
   "Chhatrapati Sambhajinagar",
   "Chhotaudepur",
-  "Chikkamagaluru",
+  "Chikkamagaluru",//tested
   "Chittorgarh",
-  "Coimbatore",
-  "Cuttack",
-  "Cyber Crime",
-  "Dadra And Nagar Haveli",
-  "Dakshina Kannada",
-  "Darbhanga",
+  "Coimbatore", // tested
+  "Cuttack", // tested
+  // "Dadra And Nagar Haveli", //no prediction
+  "Dakshina Kannada",// tested
+  "Darbhanga",//tested
   "Darjeeling",
   "Datia",
   "Dausa",
@@ -89,17 +85,17 @@ const List<String> districts = [
   "East Singhbum",
   "Etah",
   "Faridkot",
-  "Fatehgarh Sahib",
-  "Fatehpur",
-  "Firozabad",
+  "Fatehgarh Sahib",//tested
+  "Fatehpur", // tested
+  "Firozabad", // tested
   "Gadchiroli",
   "Ganderbal",
   "Ganganagar",
   "Gangtok",
   "Gariyaband",
-  "Gautam Buddha Nagar",
-  "Gaya",
-  "Ghaziabad",
+  "Gautam Buddha Nagar",//tested
+  "Gaya", //tested
+  "Ghaziabad",//tested
   "Ghazipur",
   "Giridih",
   "Gomati",
@@ -109,8 +105,8 @@ const List<String> districts = [
   "Gurugram",
   "Gyalshing",
   "Hailakandi",
-  "Hamirpur",
-  "Hardoi",
+  "Hamirpur", //tested
+  "Hardoi", // tested
   "Hassan",
   "Haveri",
   "Hingoli",
@@ -125,28 +121,27 @@ const List<String> districts = [
   "Indore",
   "Jabalpur",
   "Jagitial",
-  "Jaipur",
-  "Jajapur",
-  "Jalaun",
-  "Jalna",
-  "Jammu",
-  "Jamnagar",
-  "Jamui",
-  "Jashpur",
-  "Jaunpur",
-  "Jayashankar Bhupalapally",
-  "Jehanabad",
-  "Jhalawar",
-  "Jhargram",
-  "Jhunjhunu",
-  "Jiribam",
-  "Jodhpur",
-  "Kachchh",
-  "Kakching",
-  "Kakinada",
+  "Jaipur",// tested
+  "Jajapur",// tested
+  "Jalaun",// tested
+  "Jalna",// tested
+  "Jammu", // tested
+  "Jamnagar", // tested
+  "Jamui", // tested
+  "Jashpur",// tested
+  "Jaunpur",//tested
+  // "Jayashankar Bhupalapally",// no prediction
+  "Jehanabad",// tested
+  "Jhalawar",// tested
+  // "Jhargram",// no prediction
+  "Jhunjhunu",//tested
+  // "Jiribam", // no prediction
+  "Jodhpur",//tested
+  "Kachchh", // tested
+  // "Kakching",// no prediction
+  "Kakinada",//tested
   "Kalahandi",
   "Kamareddy",
-  "Kamjong",
   "Kamrup",
   "Kandhamal",
   "Kangpokpi",
@@ -160,11 +155,10 @@ const List<String> districts = [
   "Katni",
   "Kendrapara",
   "Kendujhar",
-  "Khairagarh-Chhuikhadan-Gandai",
   "Khairthal-Tijara",
   "Khawzawl",
   "Kheda",
-  "Kinnaur",
+  "Kinnaur",//tested
   "Kiphire",
   "Kishanganj",
   "Kishtwar",
@@ -234,7 +228,7 @@ const List<String> districts = [
   "Nizamabad",
   "Noney",
   "North",
-  "North And Middle Andaman",
+  "North And Middle Andaman",//tested
   "North Garo Hills",
   "North Goa",
   "North West",
@@ -246,7 +240,7 @@ const List<String> districts = [
   "Papum Pare",
   "Parbhani",
   "Pashchim Champaran",
-  "Pathankot",
+  // "Pathankot", no prediction
   "Patiala",
   "Patna",
   "Pauri Garhwal",
@@ -256,8 +250,8 @@ const List<String> districts = [
   "Prakasam",
   "Prayagraj",
   "Pulwama",
-  "Pune",
-  "Purba Medinipur",
+  "Pune",//tested
+  // "Purba Medinipur", no boundary
   "Purnia",
   "Purulia",
   "Rae Bareli",
@@ -291,8 +285,8 @@ const List<String> districts = [
   "Sant Kabir Nagar",
   "Satara",
   "Shahdara",
-  "Shahid Bhagat Singh Nagar",
-  "Shahjahanpur",
+  "Shahid Bhagat Singh Nagar",// tested
+  "Shahjahanpur",// tested
   "Sheohar",
   "Shi Yomi",
   "Shimla",
@@ -303,16 +297,15 @@ const List<String> districts = [
   "Siddipet",
   "Sindhudurg",
   "Sirohi",
-  "Sirsa",
+  "Sirsa",// tested
   "Sitamarhi",
   "Sivaganga",
   "Solan",
   "Solapur",
   "Sonipat",
   "Sonitpur",
-  "South 24 Parganas",
-  "South Andamans",
-  "South Garo Hills",
+  "South Andamans",// tested
+  "South Garo Hills",// tested
   "South Salmara Mancachar",
   "South Tripura",
   "South West",
@@ -339,7 +332,7 @@ const List<String> districts = [
   "Tumakuru",
   "Udam Singh Nagar",
   "Udhampur",
-  "Udupi",
+  "Udupi", // tested
   "Ujjain",
   "Ukhrul",
   "Unakoti",
@@ -348,18 +341,15 @@ const List<String> districts = [
   "Uttar Bastar Kanker",
   "Uttar Dinajpur",
   "Uttar Kashi",
-  "Vadodara",
-  "Varanasi",
-  "Vijayapura",
-  "Villupuram",
-  "Virudhunagar",
-  "Visakhapatnam",
-  "Wanaparthy",
-  "Warangal",
-  "Wayanad",
-  "West Jaintia Hills",
-  "West Karbi Anglong",
-  "West Khasi Hills",
-  "West Singhbhum",
-  "Yadgir",
+  "Vadodara", // tested
+  "Varanasi",// tested
+  "Villupuram",// tested
+  "Virudhunagar",// tested
+  // "Visakhapatnam", //no boundary
+  "Warangal", // tested
+  "Wayanad",// tested
+  "West Jaintia Hills",// tested
+  "West Karbi Anglong", // tested
+  "West Khasi Hills",// tested
+  "Yadgir", // tested
 ];
