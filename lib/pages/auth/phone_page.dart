@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safeyatra/core/constants/number.dart';
 import 'package:safeyatra/pages/auth/otp_page.dart';
 import 'package:safeyatra/widgets/buttons.dart';
-import 'package:safeyatra/services/otpservice.dart';
 import 'package:safeyatra/widgets/drop_down_button.dart';
 import 'package:safeyatra/widgets/text_field.dart';
+
 
 class PhonePage extends StatefulWidget {
   final String usrname, email, password;
@@ -25,6 +26,7 @@ class PhonePage extends StatefulWidget {
 
 class _PhonePageState extends State<PhonePage> {
   final TextEditingController phno = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
 
   Future<void> _sendOtp() async {
@@ -38,25 +40,39 @@ class _PhonePageState extends State<PhonePage> {
     }
     // Assumes Indian numbers; prepend +91 if not already present.
     final phoneNumber = rawNumber.startsWith('+') ? rawNumber : '+91$rawNumber';
-
     setState(() => _isLoading = true);
-    final sent = await sendOtp(context, phoneNumber);
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (sent) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => OtpPage(
-            usrname: widget.usrname,
-            email: widget.email,
-            password: widget.password,
-            phoneNumber: phoneNumber,
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await _auth.signInWithCredential(credential);
+        setState(() => _isLoading = false);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? "Verification failed")),
+        );
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        setState(() => _isLoading = false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OtpPage(
+              usrname: widget.usrname,
+              email: widget.email,
+              password: widget.password,
+              phoneNumber: phoneNumber,
+              verificationId: verificationId,
+            ),
           ),
-        ),
-      );
-    }
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // Optional: handle timeout, e.g. keep verificationId for manual entry.
+      },
+    );
   }
 
   @override
@@ -118,11 +134,11 @@ class _PhonePageState extends State<PhonePage> {
                   enablefocus: false,
                   width: fieldWidth.toDouble(),
                   prefixicon: MyDropdownMenu(
-                    value: "+91",
-                    onChange: (s) {},
+                    value: "+91", 
+                    onChange: (s){}, 
                     height: 200,
                     width: 115,
-                    mylist: numbers,
+                    mylist: numbers
                   ),
                   controller: phno,
                   eyebutton: false,
