@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final options = <_ProfileOption>[
       _ProfileOption(Icons.light_mode_rounded, 'Change Theme',
           () => showThemeSheet(context)),
-      _ProfileOption(Icons.phone_android_rounded, 'Change Phone Number',
+      _ProfileOption(Icons.phone_android_rounded, 'Add SOS Email',
           () => _open(const ChangePhonePage())),
       _ProfileOption(Icons.lock_reset_rounded, 'Change Password',
           () => _open(const ChangePasswordPage())),
