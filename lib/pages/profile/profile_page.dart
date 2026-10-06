@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:safeyatra/pages/profile/account_actions.dart';
 import 'package:safeyatra/pages/profile/change_password_page.dart';
-import 'package:safeyatra/pages/profile/change_phone_page.dart';
+import 'package:safeyatra/pages/profile/add_sos_email.dart';
 import 'package:safeyatra/pages/profile/contact_us_page.dart';
 import 'package:safeyatra/pages/profile/theme_sheet.dart';
 import 'package:safeyatra/widgets/profile_card.dart';
@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
       _ProfileOption(Icons.light_mode_rounded, 'Change Theme',
           () => showThemeSheet(context)),
       _ProfileOption(Icons.phone_android_rounded, 'Add SOS Email',
-          () => _open(const ChangePhonePage())),
+          () => _open(const AddSosEmailPage())),
       _ProfileOption(Icons.lock_reset_rounded, 'Change Password',
           () => _open(const ChangePasswordPage())),
       _ProfileOption(Icons.support_agent_rounded, 'Contact Us',
