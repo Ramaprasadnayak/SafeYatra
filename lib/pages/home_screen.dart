@@ -83,11 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color logoTextColor =
-        Theme.of(context).brightness == Brightness.light
-            ? Colors.black
-            : Colors.white;
-
+    final Color logoTextColor=Theme.of(context).brightness==Brightness.light?Colors.black:Colors.white;
     return Scaffold(
       appBar: AppBar(
         title: Row(

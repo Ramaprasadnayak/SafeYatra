@@ -5,39 +5,39 @@ const List<String> districts = [
   "Ahmadabad", // tested
   "Ahmednagar", // tested
   "Aizawl", // tested
-  "Aligarh",
-  "Almora",
-  "Alwar",
-  "Ambala",
-  "Amritsar",
-  "Anjaw",
-  "Anugul",
-  "Anuppur",
-  "Araria",
-  "Arwal",
-  "Ashoknagar",
-  "Auraiya",
-  "Bagalkote",
-  "Bageshwar",
-  "Bahraich",
-  "Baksa",
-  "Balangir",
-  "Baleshwar",
-  "Ballia",
-  "Balrampur",
-  "Banka",
-  "Baramulla",
-  "Bargarh",
-  "Barmer",
-  "Barpeta",
-  "Begusarai",
-  "Belagavi",
+  "Aligarh", //tested
+  "Almora", //tested
+  "Alwar", //tested
+  "Ambala", //tested
+  "Amritsar", //tested
+  "Anjaw", //tested
+  "Anugul", //tested
+  "Anuppur",//tested
+  "Araria",//tested
+  "Arwal", //tested
+  "Ashoknagar", //tested
+  "Auraiya", //tested
+  "Bagalkote",//tested
+  "Bageshwar", //tested
+  "Bahraich", //tested
+  "Baksa", //tested
+  "Balangir", //tested
+  "Baleshwar", //tested
+  "Ballia", //tested
+  "Balrampur", //tested
+  "Banka", //tested
+  "Baramulla", //tested
+  "Bargarh",  //tested
+  "Barmer", //tested
+  "Barpeta", //tested
+  "Begusarai", //tested
+  // "Belagavi", //no prediction
   // "Bengaluru Urban", //no prediction
-  "Betul",
-  "Bhadrak",
-  "Bhagalpur",
-  "Bhandara",
-  "Bharatpur",
+  "Betul", // tested
+  "Bhadrak", // tested
+  "Bhagalpur", //tested
+  "Bhandara", //tested
+  "Bharatpur", //tested
   "Bharuch",
   "Bhind",
   "Bhojpur",
