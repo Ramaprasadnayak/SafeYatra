@@ -17,7 +17,7 @@ class EmailService {
 
     final res = await http
         .post(
-          Uri.parse('$apiUrl/sos/send-alert'),
+          Uri.parse('https://$apiUrl/sos/send-alert'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',

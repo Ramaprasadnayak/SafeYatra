@@ -174,6 +174,14 @@ class _SosPageState extends State<SosPage> {
           children: [
             SosAlertBanner(active: sosActive),
             const SizedBox(height: 16),
+            ShareEmail(
+              locality: widget.locality,
+              district: widget.district,
+              coordinates: widget.coordinates,
+              latitude: widget.latitude,
+              longitude: widget.longitude,
+            ),
+            const SizedBox(height: 16),
             SosLocationCard(
               locality: widget.locality,
               district: widget.district,
@@ -183,15 +191,6 @@ class _SosPageState extends State<SosPage> {
             ),
             const SizedBox(height: 16),
             SosCallButton(onTap: widget.onCallEmergency ?? () {}),
-            const SizedBox(height: 16),
-            const SizedBox(height: 16),
-            ShareEmail(
-              locality: widget.locality,
-              district: widget.district,
-              coordinates: widget.coordinates,
-              latitude: widget.latitude,
-              longitude: widget.longitude,
-            ),
             const SizedBox(height: 16),
             const SizedBox(height: 16),
             const SosInfoBanner(text: "Stay calm. Help is on the way."),
