@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import './sos_page.dart' show SosColors;
 
 class SosAlertBanner extends StatelessWidget {

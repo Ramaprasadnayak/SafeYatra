@@ -26,45 +26,84 @@ class _ShareEmailState extends State<ShareEmail> {
   bool _sending = false;
 
   Future<void> _onTap() async {
-    if (_sending) return;
+    if (_sending || !mounted) return;
+
     final c = SosColors.of(context);
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: c.card,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.warning_amber_rounded, color: c.red),
-            const SizedBox(width: 8),
-            Text('Emergency SOS',
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: c.card,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: c.red,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Emergency SOS',
+                  style: TextStyle(
+                    color: c.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Your location details will be sent to all your '
+            'emergency contacts by email. Continue?',
+            style: TextStyle(
+              color: c.textSecondary,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: Text(
+                'Cancel',
                 style: TextStyle(
-                    color: c.textPrimary, fontWeight: FontWeight.w700)),
+                  color: c.textSecondary,
+                ),
+              ),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: c.red,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
           ],
-        ),
-        content: Text(
-          'Your location details will be sent to all your emergency contacts by email. Continue?',
-          style: TextStyle(color: c.textSecondary),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Cancel', style: TextStyle(color: c.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text('OK',
-                style: TextStyle(color: c.red, fontWeight: FontWeight.w700)),
-          ),
-        ],
-      ),
+        );
+      },
     );
+    if (!mounted) return;
 
-    if (confirmed != true || !mounted) return;
+    await WidgetsBinding.instance.endOfFrame;
 
-    setState(() => _sending = true);
-    final messenger = ScaffoldMessenger.of(context);
+    if (!mounted || confirmed != true) {
+      return;
+    }
+
+    setState(() {
+      _sending = true;
+    });
+
     try {
       final count = await EmailService.sendSosAlert(
         locality: widget.locality,
@@ -73,17 +112,41 @@ class _ShareEmailState extends State<ShareEmail> {
         latitude: widget.latitude,
         longitude: widget.longitude,
       );
-      messenger.showSnackBar(SnackBar(
-        content: Text('SOS sent to $count emergency contact(s)'),
-        backgroundColor: c.green,
-      ));
+
+      if (!mounted) return;
+
+      final successColors = SosColors.of(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'SOS sent to $count emergency contact(s)',
+          ),
+          backgroundColor: successColors.green,
+        ),
+      );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(
-        content: Text(e.toString().replaceFirst('Exception: ', '')),
-        backgroundColor: c.red,
-      ));
+      if (!mounted) return;
+
+      final errorColors = SosColors.of(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString().replaceFirst(
+              'Exception: ',
+              '',
+            ),
+          ),
+          backgroundColor: errorColors.red,
+        ),
+      );
     } finally {
-      if (mounted) setState(() => _sending = false);
+      if (!mounted) return;
+
+      setState(() {
+        _sending = false;
+      });
     }
   }
 
@@ -96,12 +159,17 @@ class _ShareEmailState extends State<ShareEmail> {
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: _onTap,
+        onTap: _sending ? null : _onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 16,
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: c.cardBorder),
+            border: Border.all(
+              color: c.cardBorder,
+            ),
           ),
           child: Row(
             children: [
@@ -116,14 +184,21 @@ class _ShareEmailState extends State<ShareEmail> {
                     ? Padding(
                         padding: const EdgeInsets.all(12),
                         child: CircularProgressIndicator(
-                            strokeWidth: 2.5, color: c.blue),
+                          strokeWidth: 2.5,
+                          color: c.blue,
+                        ),
                       )
-                    : Icon(Icons.email_outlined, color: c.blue, size: 22),
+                    : Icon(
+                        Icons.email_outlined,
+                        color: c.blue,
+                        size: 22,
+                      ),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
                     Text(
                       'ALERT EMERGENCY CONTACTS',
@@ -137,12 +212,19 @@ class _ShareEmailState extends State<ShareEmail> {
                     const SizedBox(height: 2),
                     Text(
                       'Email your live location to saved contacts',
-                      style: TextStyle(color: c.textSecondary, fontSize: 12),
+                      style: TextStyle(
+                        color: c.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right, color: c.textSecondary, size: 26),
+              Icon(
+                Icons.chevron_right,
+                color: c.textSecondary,
+                size: 26,
+              ),
             ],
           ),
         ),
