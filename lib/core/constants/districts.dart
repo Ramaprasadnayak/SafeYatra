@@ -38,89 +38,88 @@ const List<String> districts = [
   "Bhagalpur", //tested
   "Bhandara", //tested
   "Bharatpur", //tested
-  "Bharuch",
-  "Bhind",
-  "Bhojpur",
-  "Bhopal",
-  "Bidar",
-  "Bijnor",
-  "Bikaner",
-  "Bishnupur",
-  "Bokaro",
-  "Bongaigaon",
-  "Budgam",
-  "Bulandshahr",
-  "Burhanpur",
-  "Chamoli",
-  "Champawat",
-  "Chandigarh",
-  "Changlang",
-  "Chatra",
-  "Chennai",
-  "Chhatrapati Sambhajinagar",
-  "Chhotaudepur",
+  "Bharuch",//tested
+  "Bhind",//tested
+  "Bhojpur",//tested
+  "Bhopal",//tested
+  "Bidar",//tested
+  "Bijnor",//tested
+  "Bikaner",//tested
+  "Bishnupur",//tested
+  "Bokaro",//tested
+  "Bongaigaon",//tested
+  "Budgam",//tested
+  "Bulandshahr",//tested
+  "Burhanpur",//tested
+  "Chamoli",//tested
+  "Champawat",//tested
+  "Chandigarh",//tested
+  "Changlang",//tested
+  "Chatra",//tested
+  "Chennai",//tested
+  "Chhatrapati Sambhajinagar",// tested
+  // "Chhotaudepur",// no prediction
   "Chikkamagaluru",//tested
-  "Chittorgarh",
+  "Chittorgarh",//tested
   "Coimbatore", // tested
   "Cuttack", // tested
   // "Dadra And Nagar Haveli", //no prediction
   "Dakshina Kannada",// tested
   "Darbhanga",//tested
-  "Darjeeling",
-  "Datia",
-  "Dausa",
-  "Deogarh",
-  "Deoria",
-  "Dhamtari",
-  "Dhanbad",
-  "Dhar",
-  "Dharashiv",
-  "Dharwad",
-  "Dhenkanal",
-  "Dibrugarh",
-  "Dima Hasao",
-  "Dimapur",
-  "Diu",
-  "Durg",
-  "East Singhbum",
-  "Etah",
-  "Faridkot",
+  "Darjeeling",//tested
+  "Datia",//tested
+  "Dausa", //tested
+  "Deogarh",// tested
+  "Deoria",// tested
+  "Dhamtari",// tested
+  "Dhanbad",// tested
+  "Dhar",//tested
+  // "Dharashiv",// no boundary
+  "Dharwad",//tested
+  "Dhenkanal",//tested
+  "Dibrugarh",//tested
+  "Dima Hasao",//tested
+  "Dimapur",//tested
+  // "Diu",// no prediction
+  "Durg",//tested
+  // "East Singhbum", no prediction
+  "Etah",//tested
+  "Faridkot",// tested
   "Fatehgarh Sahib",//tested
   "Fatehpur", // tested
   "Firozabad", // tested
-  "Gadchiroli",
-  "Ganderbal",
-  "Ganganagar",
-  "Gangtok",
-  "Gariyaband",
+  "Gadchiroli",// tested
+  "Ganderbal",// tested
+  "Ganganagar",// tested
+  // "Gangtok", no prediction 
+  // "Gariyaband",no prediction
   "Gautam Buddha Nagar",//tested
   "Gaya", //tested
   "Ghaziabad",//tested
-  "Ghazipur",
-  "Giridih",
-  "Gomati",
-  "Gopalganj",
-  "Gorakhpur",
-  "Gurdaspur",
-  "Gurugram",
-  "Gyalshing",
-  "Hailakandi",
+  "Ghazipur",//tested
+  "Giridih",//tested
+  // "Gomati",//no prediction
+  "Gopalganj",//tested
+  "Gorakhpur",//tested
+  "Gurdaspur",//tested
+  // "Gurugram",no prediction
+  "Gyalshing",// tested
+  "Hailakandi",// tested
   "Hamirpur", //tested
   "Hardoi", // tested
-  "Hassan",
-  "Haveri",
-  "Hingoli",
-  "Hisar",
-  "Hnahthial",
-  "Hojai",
-  "Hooghly",
-  "Howrah",
-  "Hyderabad",
-  "Idukki",
-  "Imphal West",
-  "Indore",
-  "Jabalpur",
-  "Jagitial",
+  "Hassan",// tested
+  "Haveri",// tested
+  "Hingoli",//tested
+  "Hisar",//tested
+  // "Hojai",no prediction
+  "Hooghly",//tested
+  "Howrah",// tested
+  "Hyderabad",//tested
+  "Idukki",//tested
+  "Imphal West",//tested
+  "Indore",//tested
+  "Jabalpur",//tested
+  // "Jagitial",//no prediction
   "Jaipur",// tested
   "Jajapur",// tested
   "Jalaun",// tested
@@ -140,207 +139,205 @@ const List<String> districts = [
   "Kachchh", // tested
   // "Kakching",// no prediction
   "Kakinada",//tested
-  "Kalahandi",
-  "Kamareddy",
-  "Kamrup",
-  "Kandhamal",
-  "Kangpokpi",
-  "Kanpur Dehat",
-  "Kanpur Nagar",
-  "Kapurthala",
-  "Karimnagar",
-  "Kasaragod",
-  "Kasganj",
-  "Kathua",
-  "Katni",
-  "Kendrapara",
-  "Kendujhar",
-  "Khairthal-Tijara",
-  "Khawzawl",
-  "Kheda",
+  "Kalahandi",//tested
+  "Kamareddy",//tested
+  "Kamrup",//tested
+  "Kandhamal",//tested
+  // "Kangpokpi",//no prediction
+  "Kanpur Dehat",//tested
+  "Kanpur Nagar",//tested
+  "Kapurthala",//tested
+  "Karimnagar",//tested
+  "Kasaragod",//tested
+  // "Kasganj",//no prediction
+  "Kathua",//tested
+  "Katni",//tested
+  "Kendrapara",//tested
+  "Kendujhar",//tested
+  "Khairthal-Tijara",//tested
+  "Kheda",//tested
   "Kinnaur",//tested
-  "Kiphire",
-  "Kishanganj",
-  "Kishtwar",
-  "Kohima",
-  "Kolar",
-  "Kollam",
-  "Kondagaon",
-  "Kra Daadi",
-  "Krishna",
-  "Kushinagar",
-  "Lakhimpur",
-  "Lalitpur",
-  "Latur",
-  "Lawngtlai",
-  "Lohardaga",
-  "Lohit",
-  "Longding",
-  "Lower Dibang Valley",
-  "Lower Subansiri",
-  "Lucknow",
-  "Ludhiana",
-  "Madhepura",
-  "Madhubani",
-  "Madurai",
-  "Mahabubabad",
-  "Mahabubnagar",
-  "Mahasamund",
-  "Mahesana",
-  "Mahisagar",
-  "Mahoba",
-  "Mahrajganj",
-  "Malappuram",
-  "Malda",
-  "Mandla",
-  "Mandya",
-  "Mansa",
-  "Mau",
-  "Mayurbhanj",
-  "Medak",
-  "Meerut",
-  "Mirzapur",
-  "Moga",
-  "Mokokchung",
-  "Moradabad",
-  "Mumbai",
-  "Mumbai Suburban",
-  "Munger",
-  "Murshidabad",
-  "Muzaffarpur",
-  "Nadia",
-  "Nagaon",
-  "Nagapattinam",
-  "Nagarkurnool",
-  "Nagaur",
-  "Nagpur",
-  "Nainital",
-  "Nalbari",
-  "Nalgonda",
-  "Nandurbar",
-  "Narayanpur",
-  "Narmada",
-  "Narmadapuram",
-  "Navsari",
-  "Nawada",
-  "Neemuch",
-  "New Delhi",
-  "Nizamabad",
-  "Noney",
-  "North",
+  "Kiphire",//tested
+  "Kishanganj",//tested
+  "Kishtwar",//tested
+  "Kohima",//tested
+  "Kolar",//tested
+  "Kollam",//tested
+  // "Kondagaon",//no prediction
+  // "Kra Daadi",no prediction
+  "Krishna",//tested
+  // "Kushinagar",//no boundary
+  "Lakhimpur",//tested
+  "Lalitpur",//tested
+  "Latur",//tested
+  "Lawngtlai",//tested
+  "Lohardaga",//tested
+  "Lohitpur",//tested
+  // "Longding",no prediction
+  "Lower Dibang Valley",//tested
+  "Lower Subansiri",//tested
+  "Lucknow",//tested
+  "Ludhiana",//tested
+  "Madhepura",//tested
+  "Madhubani",//tested
+  "Madurai",//tested
+  "Mahabubabad",//tested
+  "Mahabubnagar",//tested
+  "Mahasamund",//tested
+  "Mahesana",//tested
+  // "Mahisagar",//no prediction
+  "Mahoba",//tested
+  // "Mahrajganj",no boundary
+  "Malappuram",//tested
+  // "Malda",//no boundary
+  "Mandla",//tested
+  "Mandya",//tested
+  "Mansa",//tested
+  "Mau",//tested
+  "Mayurbhanj",//tested
+  "Medak",//tested
+  "Meerut",//tested
+  "Mirzapur",//tested
+  "Moga",//tested
+  "Mokokchung",//tested
+  "Moradabad",//tested
+  "Mumbai",//tested
+  "Mumbai Suburban",//tested
+  "Munger",//tested
+  "Murshidabad",//tested
+  "Muzaffarpur",//tested
+  "Nadia",//tested
+  "Nagaon",//tested
+  "Nagapattinam",//tested
+  "Nagarkurnool",//tested
+  "Nagaur",//tested
+  "Nagpur",//tested
+  "Nainital",//tested
+  "Nalbari",//tested
+  "Nalgonda",//tested
+  "Nandurbar",//tested
+  "Narayanpur",//tested
+  "Narmada",//tested
+  // "Narmadapuram",no prediction
+  "Navsari",//tested
+  "Nawada",//tested
+  "Neemuch",//tested
+  "New Delhi",//tested
+  "Nizamabad",//tested
+  // "Noney",no prediction
+  "North",//tested
   "North And Middle Andaman",//tested
-  "North Garo Hills",
-  "North Goa",
-  "North West",
-  "Palakkad",
-  "Palamu",
-  "Panch Mahals",
-  "Panchkula",
-  "Panna",
-  "Papum Pare",
-  "Parbhani",
-  "Pashchim Champaran",
+  "North Garo Hills",//tested
+  "North Goa",//tested
+  "North West",//tested
+  "Palakkad",//tested
+  "Palamu",//tested
+  "Panch Mahals",//tested
+  "Panchkula",//tested
+  "Panna",//tested
+  "Papum Pare",//tested
+  "Parbhani",//tested
+  "Pashchim Champaran",//tested
   // "Pathankot", no prediction
-  "Patiala",
-  "Patna",
-  "Pauri Garhwal",
-  "Peddapalli",
-  "Phek",
-  "Pondicherry",
-  "Prakasam",
-  "Prayagraj",
-  "Pulwama",
+  "Patiala",//tested
+  "Patna",//tested
+  "Pauri Garhwal",//tested
+  // "Peddapalli",no prediction
+  "Phek",//tested
+  "Pondicherry",//tested
+  "Prakasam",//tested
+  // "Prayagraj",no prediction
+  "Pulwama",//tested
   "Pune",//tested
   // "Purba Medinipur", no boundary
-  "Purnia",
-  "Purulia",
-  "Rae Bareli",
-  "Raichur",
-  "Raigarh",
-  "Raipur",
-  "Rajanna Sircilla",
-  "Rajgarh",
-  "Rajkot",
-  "Rajnandgaon",
-  "Rajsamand",
-  "Ramanagara",
-  "Ramgarh",
-  "Ranchi",
-  "Ratnagiri",
-  "Reasi",
-  "Rewari",
-  "Rohtak",
-  "Rohtas",
-  "Rudra Prayag",
-  "S.A.S Nagar",
-  "Saharanpur",
-  "Saharsa",
-  "Salem",
-  "Samastipur",
-  "Samba",
-  "Sambhal",
-  "Sangareddy",
-  "Sangli",
-  "Sangrur",
-  "Sant Kabir Nagar",
-  "Satara",
-  "Shahdara",
+  "Purnia",//tested
+  "Purulia",//tested
+  "Rae Bareli",//tested
+  "Raichur",//tested
+  "Raigarh",//tested
+  "Raipur",//tested
+  // "Rajanna Sircilla",no prediction
+  "Rajgarh",//tested
+  "Rajkot",//tested
+  "Rajnandgaon",//tested
+  "Rajsamand",//tested
+  "Ramanagara",//tested
+  "Ramgarh",//tested
+  "Ranchi",//tested
+  "Ratnagiri",//tested
+  "Reasi",//tested
+  "Rewari",//tested
+  "Rohtak",//tested
+  "Rohtas",//tested
+  "Rudra Prayag",//tested
+  "S.A.S Nagar",//tested
+  "Saharanpur",//tested
+  "Saharsa",//tested
+  "Salem",//tested
+  "Samastipur",//tested
+  "Samba",//tested
+  // "Sambhal",no prediction
+  "Sangareddy",//tested
+  "Sangli",//tested
+  "Sangrur",//tested
+  // "Sant Kabir Nagar,//no boundary"
+  "Satara",//tested
+  // "Shahdara",//no prediction
   "Shahid Bhagat Singh Nagar",// tested
   "Shahjahanpur",// tested
-  "Sheohar",
-  "Shi Yomi",
-  "Shimla",
-  "Shopian",
-  "Shrawasti",
-  "Siang",
-  "Siddharthnagar",
-  "Siddipet",
-  "Sindhudurg",
-  "Sirohi",
+  "Sheohar",//tested
+  // "Shi Yomi",no prediction
+  "Shimla",//tested
+  "Shopian",//tested
+  // "Shrawasti",//no boundary
+  // "Siang", no prediction
+  // "Siddharthnagar",no boundary
+  // "Siddipet",//no prediction
+  "Sindhudurg",// tested
+  "Sirohi",// tested
   "Sirsa",// tested
-  "Sitamarhi",
-  "Sivaganga",
-  "Solan",
-  "Solapur",
-  "Sonipat",
-  "Sonitpur",
+  "Sitamarhi",//tested
+  "Sivaganga",//tested
+  "Solan",//tested
+  "Solapur",//tested
+  "Sonipat",//tested
+  "Sonitpur",//tested
   "South Andamans",// tested
   "South Garo Hills",// tested
-  "South Salmara Mancachar",
-  "South Tripura",
-  "South West",
-  "Sri Muktsar Sahib",
-  "Sri Potti Sriramulu Nellore",
-  "Srikakulam",
-  "Srinagar",
-  "Sundargarh",
-  "Surat",
-  "Surguja",
-  "Tamenglong",
-  "Tarn Taran",
-  "Tengnoupal",
-  "Thanjavur",
-  "The Nilgiris",
-  "Thiruvallur",
-  "Thiruvananthapuram",
-  "Thiruvarur",
-  "Thrissur",
-  "Tiruchirappalli",
-  "Tirunelveli",
-  "Tirupati",
-  "Tuensang",
-  "Tumakuru",
-  "Udam Singh Nagar",
-  "Udhampur",
+  // "South Salmara Mancachar",//no prediction
+  "South Tripura",//tested
+  "South West najafgarh",//tested
+  "Sri Muktsar Sahib",//tested
+  // "Sri Potti Sriramulu Nellore",//no boundary
+  "Srikakulam",//tested
+  "Srinagar",//tested
+  "Sundargarh",//tested
+  "Surat",//tested
+  "Surguja",//tested
+  "Tamenglong",//tested
+  "Tarn Taran",//tested
+  // "Tengnoupal",no prediction
+  "Thanjavur",//tested
+  "The Nilgiris",//tested
+  "Thiruvallur",//tested
+  "Thiruvananthapuram",//tested
+  "Thiruvarur",//tested
+  "Thrissur",//tested
+  "Tiruchirappalli",//tested
+  "Tirunelveli",//tested
+  "Tuensang",//tested
+  "Tumakuru",//tested
+  "Udam Singh Nagar",//tested
+  "Udhampur",// tested
   "Udupi", // tested
-  "Ujjain",
-  "Ukhrul",
-  "Unakoti",
-  "Upper Siang",
-  "Upper Subansiri",
-  "Uttar Bastar Kanker",
-  "Uttar Dinajpur",
-  "Uttar Kashi",
+  "Ujjain",// tested
+  "Ukhrul",//tested
+  // "Unakoti",//no prediction
+  "Upper Siang",//tested
+  "Upper Subansiri",//tested
+  // "Uttar Bastar Kanker",//no boundary
+  // "Uttar Dinajpur",//no boundary
+  "Uttar Kashi",//tested
   "Vadodara", // tested
   "Varanasi",// tested
   "Villupuram",// tested
