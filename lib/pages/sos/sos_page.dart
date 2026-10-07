@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:safeyatra/pages/sos/share_email.dart';
 import 'package:safeyatra/pages/sos/sos_alert_banner.dart';
 import 'package:safeyatra/pages/sos/sos_call_button.dart';
 import 'package:safeyatra/pages/sos/sos_location_card.dart';
 import 'package:safeyatra/pages/sos/sos_info_banner.dart';
+
 @immutable
 class SosColors extends ThemeExtension<SosColors> {
   final Color background;
   final Color card;
   final Color cardBorder;
   final Color red;
-  final Color redDark; 
+  final Color redDark;
   final Color green;
   final Color blue;
   final Color textPrimary;
@@ -56,11 +58,8 @@ class SosColors extends ThemeExtension<SosColors> {
     textPrimary: Color(0xFF111827),
     textSecondary: Color(0xFF6B7280),
     mapBackground: Color(0xFFE8EDF5),
-    mapLine: Color(0x1F000000), // black @ ~12%
+    mapLine: Color(0x1F000000),
   );
-
-  /// Falls back to the palette matching the current brightness if the
-  /// extension was not registered on the ThemeData.
   static SosColors of(BuildContext context) {
     final theme = Theme.of(context);
     return theme.extension<SosColors>() ??
@@ -135,6 +134,7 @@ class SosPage extends StatefulWidget {
   final String locality;
   final String district;
   final String coordinates;
+  final double? latitude,longitude;
 
   const SosPage({
     super.key,
@@ -143,6 +143,8 @@ class SosPage extends StatefulWidget {
     this.locality = "Koramangala",
     this.district = "Bengaluru Urban District, Karnataka",
     this.coordinates = "13.0123° N, 77.6245° E",
+    this.latitude=13.0123,
+    this.longitude=77.6245
   });
 
   @override
@@ -180,10 +182,16 @@ class _SosPageState extends State<SosPage> {
               activatedAtLabel: _formattedTime,
             ),
             const SizedBox(height: 16),
-            SosCallButton(
-              onTap: widget.onCallEmergency ?? () {},
-            ),
+            SosCallButton(onTap: widget.onCallEmergency ?? () {}),
             const SizedBox(height: 16),
+            const SizedBox(height: 16),
+            ShareEmail(
+              locality: widget.locality,
+              district: widget.district,
+              coordinates: widget.coordinates,
+              latitude: widget.latitude,
+              longitude: widget.longitude,
+            ),
             const SizedBox(height: 16),
             const SizedBox(height: 16),
             const SosInfoBanner(text: "Stay calm. Help is on the way."),

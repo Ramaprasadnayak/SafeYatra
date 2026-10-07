@@ -54,10 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
           usrstate: controller.usrstate,
           usrnation: controller.usrnation,
           usrscore: controller.usrscore,
-          onRefreshLocation: () => controller.refreshLocation(
-            context,
-            _refreshUi,
-          ),
+          onRefreshLocation: () =>
+              controller.refreshLocation(context, _refreshUi),
         );
       case 1:
         return Safemap();
@@ -66,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
           locality: controller.usrcity,
           district: controller.usrdistrict,
           coordinates: controller.coordinatesLabel,
+          latitude: controller.hasFix ? controller.latitude : null,
+          longitude: controller.hasFix ? controller.longitude : null,
           onCallEmergency: () async {
             await emergency.EmergencyService.callEmergencyWithConfirmation(
               context,
@@ -83,17 +83,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color logoTextColor=Theme.of(context).brightness==Brightness.light?Colors.black:Colors.white;
+    final Color logoTextColor = Theme.of(context).brightness == Brightness.light
+        ? Colors.black
+        : Colors.white;
     return Scaffold(
       appBar: AppBar(
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.shield_outlined,
-              color: Colors.blue,
-              size: 40,
-            ),
+            const Icon(Icons.shield_outlined, color: Colors.blue, size: 40),
             const SizedBox(width: 6),
             RichText(
               text: TextSpan(
@@ -124,9 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => NotificationPage(),
-                ),
+                MaterialPageRoute(builder: (context) => NotificationPage()),
               );
             },
             icon: const Icon(Icons.notifications_outlined),
@@ -163,11 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.call,
-                    color: Colors.white,
-                    size: 25,
-                  ),
+                  Icon(Icons.call, color: Colors.white, size: 25),
                   Text(
                     "SOS",
                     style: TextStyle(

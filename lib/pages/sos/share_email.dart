@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:safeyatra/services/email_service.dart';
 import './sos_page.dart' show SosColors;
-import 'email_service.dart';
 
 class ShareEmail extends StatefulWidget {
   final String locality;
