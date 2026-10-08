@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safeyatra/pages/auth/email_verification.dart';
-// import 'package:safeyatra/services/login_register.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 import 'package:safeyatra/widgets/text_field.dart';
 
@@ -155,20 +154,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hideText: true,
               ),
               const SizedBox(height: 18),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    "Forgot password?",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1D6FB8),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
               const SizedBox(height: 40),
               Button(
                 height: 56,

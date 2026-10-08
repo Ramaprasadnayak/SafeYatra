@@ -119,20 +119,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   hideText: true,
                 ),
                 const SizedBox(height: 18),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Forgot password?",
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1D6FB8),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                  ],  
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     Text(
+                //       "Forgot password?",
+                //       style: GoogleFonts.poppins(
+                //         fontSize: 16,
+                //         fontWeight: FontWeight.w600,
+                //         color: const Color(0xFF1D6FB8),
+                //       ),
+                //     ),
+                //     SizedBox(width: 10),
+                //   ],  
+                // ),
                 const SizedBox(height: 40),
                 Button(
                   height: 56, 
