@@ -1,381 +1,152 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-
 class SosEmailException implements Exception {
   final String message;
-
   const SosEmailException(this.message);
 
   @override
   String toString() => message;
 }
 
+class EmailService {
+  static const Duration _timeout = Duration(seconds: 30);
 
-class SosEmailService {
-
-  static const Duration _timeout =
-      Duration(seconds: 30);
-
-  String _getApiUrl() {
-
-    final apiUrl = dotenv.env['apiUrl'];
-
-    if (apiUrl == null ||
-        apiUrl.trim().isEmpty) {
-
-      throw const SosEmailException(
-        'API URL is not configured',
-      );
+  static String _baseUrl() {
+    final raw = dotenv.env['apiUrl']?.trim() ?? '';
+    if (raw.isEmpty) {
+      throw const SosEmailException('API URL is not configured');
     }
-
-    String url = apiUrl.trim();
-
-    if (!url.startsWith('http://') &&
-        !url.startsWith('https://')) {
-
-      url = 'https://$url';
-    }
-
-    return url.replaceFirst(
-      RegExp(r'/$'),
-      '',
-    );
+    final url =
+        raw.startsWith('http://') || raw.startsWith('https://') ? raw : 'https://$raw';
+    return url.replaceFirst(RegExp(r'/+$'), '');
   }
 
-  Future<String> _getToken() async {
+  static Uri _uri(String path) => Uri.parse('${_baseUrl()}$path');
 
-    final user =
-        FirebaseAuth.instance.currentUser;
-
+  static Future<Map<String, String>> _headers({bool json = false}) async {
+    final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-
-      throw const SosEmailException(
-        'Please log in again',
-      );
+      throw const SosEmailException('Please log in again');
     }
-
+    String? token;
     try {
-
-      final token =
-          await user.getIdToken();
-
-      if (token == null ||
-          token.isEmpty) {
-
-        throw const SosEmailException(
-          'Authentication failed. Please log in again.',
-        );
-      }
-
-      return token;
-
-    } catch (e) {
-
-      if (e is SosEmailException) {
-        rethrow;
-      }
-
-      throw const SosEmailException(
-        'Unable to authenticate. Please log in again.',
-      );
+      token = await user.getIdToken(true); // force refresh, avoids expired tokens
+    } catch (_) {}
+    if (token == null || token.isEmpty) {
+      throw const SosEmailException('Unable to authenticate. Please log in again.');
     }
-  }
-
-
-  Future<Map<String, String>> _headers({
-    bool includeContentType = false,
-  }) async {
-
-    final token =
-        await _getToken();
-
     return {
       'Accept': 'application/json',
-
-      'Authorization':
-          'Bearer $token',
-
-      if (includeContentType)
-        'Content-Type':
-            'application/json',
+      'Authorization': 'Bearer $token',
+      if (json) 'Content-Type': 'application/json',
     };
   }
 
-  Uri _endpoint(String path) {
-
-    return Uri.parse(
-      '${_getApiUrl()}$path',
-    );
-  }
-
-  String _errorMessage(
-    http.Response response,
-    String fallback,
-  ) {
-
+  static String _error(http.Response r, String fallback) {
     try {
-
-      final data =
-          jsonDecode(response.body);
-
-      if (data is Map &&
-          data['detail'] != null) {
-
+      final data = jsonDecode(r.body);
+      if (data is Map && data['detail'] != null) {
         return data['detail'].toString();
       }
-
-    } catch (_) {
-      // Ignore JSON parsing error.
-    }
-
-    if (response.body
-        .trim()
-        .isNotEmpty) {
-
-      return response.body.trim();
-    }
-
-    return fallback;
+    } catch (_) {}
+    return '$fallback (${r.statusCode})';
   }
 
-  Future<List<String>> getEmails() async {
-
+  static Future<http.Response> _run(Future<http.Response> Function() call) async {
     try {
-
-      final response = await http
-          .get(
-            _endpoint('/sos/emails'),
-            headers: await _headers(),
-          )
-          .timeout(_timeout);
-
-      if (response.statusCode != 200) {
-
-        throw SosEmailException(
-          _errorMessage(
-            response,
-            'Failed to load SOS emails',
-          ),
-        );
-      }
-
-      final data =
-          jsonDecode(response.body);
-
-      if (data is! Map ||
-          data['emails'] is! List) {
-
-        throw const SosEmailException(
-          'Invalid response from server',
-        );
-      }
-
-      final emails =
-          (data['emails'] as List)
-              .map(
-                (item) => item
-                    .toString()
-                    .trim()
-                    .toLowerCase(),
-              )
-              .where(
-                (email) =>
-                    email.isNotEmpty,
-              )
-              .toSet()
-              .take(2)
-              .toList();
-
-      return emails;
-
+      return await call().timeout(_timeout);
     } on TimeoutException {
-
-      throw const SosEmailException(
-        'Server took too long to respond',
-      );
-
+      throw const SosEmailException('Server took too long to respond');
     } on SosEmailException {
-
       rethrow;
-
-    } on FormatException {
-
-      throw const SosEmailException(
-        'Invalid response from server',
-      );
-
     } catch (_) {
-
-      throw const SosEmailException(
-        'Unable to load SOS emails',
-      );
+      throw const SosEmailException('Network error. Please try again.');
     }
   }
 
-  Future<void> addEmail(
-    String email,
-  ) async {
-
-    final cleanEmail =
-        email.trim().toLowerCase();
-
-    if (cleanEmail.isEmpty) {
-
-      throw const SosEmailException(
-        'Email address cannot be empty',
-      );
-    }
-
-    try {
-
-      final response = await http
-          .post(
-            _endpoint('/sos/add-email'),
-
-            headers: await _headers(
-              includeContentType: true,
-            ),
-
-            body: jsonEncode({
-              'email': cleanEmail,
-            }),
-          )
-          .timeout(_timeout);
-
-      if (response.statusCode == 200) {
-        return;
-      }
-
-      throw SosEmailException(
-        _errorMessage(
-          response,
-          'Failed to add SOS email',
-        ),
-      );
-
-    } on TimeoutException {
-
-      throw const SosEmailException(
-        'Server took too long to respond',
-      );
-
-    } on SosEmailException {
-
-      rethrow;
-
-    } catch (_) {
-
-      throw const SosEmailException(
-        'Network error. Please try again.',
-      );
-    }
-  }
-  Future<void> deleteEmail(
-    String email,
-  ) async {
-
-    final cleanEmail =
-        email.trim().toLowerCase();
-
-    if (cleanEmail.isEmpty) {
-
-      throw const SosEmailException(
-        'Email address cannot be empty',
-      );
+  static Future<List<String>> getEmails() async {
+    final headers = await _headers();
+    final r = await _run(() => http.get(_uri('/sos/emails'), headers: headers));
+    if (r.statusCode != 200) {
+      throw SosEmailException(_error(r, 'Failed to load SOS emails'));
     }
     try {
-      final response = await http
-          .delete(
-            _endpoint('/sos/delete-email'),
-            headers: await _headers(
-              includeContentType: true,
-            ),
-            body: jsonEncode({
-              'email': cleanEmail,
-            }),
-          )
-          .timeout(_timeout);
-      if (response.statusCode == 200) {
-        return;
-      }
-      throw SosEmailException(
-        _errorMessage(
-          response,
-          'Failed to delete SOS email',
-        ),
-      );
-    } on TimeoutException {
-      throw const SosEmailException(
-        'Server took too long to respond',
-      );
-
-    } on SosEmailException {
-
-      rethrow;
-
+      final data = jsonDecode(r.body);
+      return (data['emails'] as List)
+          .map((e) => e.toString().trim().toLowerCase())
+          .where((e) => e.isNotEmpty)
+          .toSet()
+          .take(2)
+          .toList();
     } catch (_) {
-
-      throw const SosEmailException(
-        'Network error. Please try again.',
-      );
+      throw const SosEmailException('Invalid response from server');
     }
   }
 
-  Future<Map<String, dynamic>> triggerSos({
+  static Future<void> addEmail(String email) async {
+    final clean = email.trim().toLowerCase();
+    if (clean.isEmpty) {
+      throw const SosEmailException('Email address cannot be empty');
+    }
+    final headers = await _headers(json: true);
+    final r = await _run(() => http.post(
+          _uri('/sos/add-email'),
+          headers: headers,
+          body: jsonEncode({'email': clean}),
+        ));
+    if (r.statusCode != 200) {
+      throw SosEmailException(_error(r, 'Failed to add SOS email'));
+    }
+  }
+
+  static Future<void> deleteEmail(String email) async {
+    final clean = email.trim().toLowerCase();
+    if (clean.isEmpty) {
+      throw const SosEmailException('Email address cannot be empty');
+    }
+    final headers = await _headers(json: true);
+    final r = await _run(() => http.delete(
+          _uri('/sos/delete-email'),
+          headers: headers,
+          body: jsonEncode({'email': clean}),
+        ));
+    if (r.statusCode != 200) {
+      throw SosEmailException(_error(r, 'Failed to delete SOS email'));
+    }
+  }
+
+  static Future<int> sendSosAlert({
     required String locality,
     required String district,
     required String coordinates,
     double? latitude,
     double? longitude,
   }) async {
+    final headers = await _headers(json: true);
+    final r = await _run(() => http.post(
+          _uri('/sos/trigger'),
+          headers: headers,
+          body: jsonEncode({
+            'locality': locality,
+            'district': district,
+            'coordinates': coordinates,
+            'latitude': latitude,
+            'longitude': longitude,
+          }),
+        ));
+
+    if (r.statusCode != 200) {
+      throw SosEmailException(_error(r, 'Failed to send SOS alert'));
+    }
     try {
-      final response = await http
-          .post(
-            _endpoint('/sos/trigger'),
-            headers: await _headers(
-              includeContentType: true,
-            ),
-            body: jsonEncode({
-              'latitude': latitude,
-              'longitude': longitude,
-              'locality': locality,
-              'district': district,
-              'coordinates': coordinates,
-            }),
-          )
-          .timeout(_timeout);
-      if (response.statusCode == 200) {
-        final data =jsonDecode(response.body);
-        if (data is Map<String, dynamic>) {
-          return data;
-        }
-        throw const SosEmailException(
-          'Invalid response from server',
-        );
-      }
-      throw SosEmailException(
-        _errorMessage(
-          response,
-          'Failed to send SOS alert',
-        ),
-      );
-    } on TimeoutException {
-      throw const SosEmailException(
-        'Server took too long to respond',
-      );
-    } on SosEmailException {
-      rethrow;
-
+      final data = jsonDecode(r.body) as Map<String, dynamic>;
+      return (data['sent_to'] as List).length;
     } catch (_) {
-
-      throw const SosEmailException(
-        'Unable to send SOS alert. Please try again.',
-      );
+      throw const SosEmailException('Invalid response from server');
     }
   }
 }

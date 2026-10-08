@@ -25,84 +25,66 @@ class ShareEmail extends StatefulWidget {
 class _ShareEmailState extends State<ShareEmail> {
   bool _sending = false;
 
-  Future<void> _onTap() async {
-    if (_sending || !mounted) return;
-
+  Future<bool> _confirm() async {
     final c = SosColors.of(context);
-
-    final confirmed = await showDialog<bool>(
+    final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) {
-        return AlertDialog(
-          backgroundColor: c.card,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: c.red,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Emergency SOS',
-                  style: TextStyle(
-                    color: c.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            'Your location details will be sent to all your '
-            'emergency contacts by email. Continue?',
-            style: TextStyle(
-              color: c.textSecondary,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop(false);
-              },
+      builder: (ctx) => AlertDialog(
+        backgroundColor: c.card,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: c.red),
+            const SizedBox(width: 8),
+            Expanded(
               child: Text(
-                'Cancel',
+                'Emergency SOS',
                 style: TextStyle(
-                  color: c.textSecondary,
-                ),
-              ),
-            ),
-            FilledButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop(true);
-              },
-              child: Text(
-                'OK',
-                style: TextStyle(
-                  color: c.red,
+                  color: c.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
           ],
-        );
-      },
+        ),
+        content: Text(
+          'Your location details will be sent to all your emergency '
+          'contacts by email. Continue?',
+          style: TextStyle(color: c.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('Cancel', style: TextStyle(color: c.textSecondary)),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: c.red),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text(
+              'Send',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
     );
-    if (!mounted) return;
+    return result == true;
+  }
 
-    await WidgetsBinding.instance.endOfFrame;
+  void _snack(String message, Color color) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message), backgroundColor: color));
+  }
 
-    if (!mounted || confirmed != true) {
-      return;
-    }
+  Future<void> _onTap() async {
+    if (_sending) return;
 
-    setState(() {
-      _sending = true;
-    });
+    final confirmed = await _confirm();
+    if (!mounted || !confirmed) return;
+
+    setState(() => _sending = true);
 
     try {
       final count = await EmailService.sendSosAlert(
@@ -112,42 +94,17 @@ class _ShareEmailState extends State<ShareEmail> {
         latitude: widget.latitude,
         longitude: widget.longitude,
       );
-
       if (!mounted) return;
-
-      final successColors = SosColors.of(context);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'SOS sent to $count emergency contact(s)',
-          ),
-          backgroundColor: successColors.green,
-        ),
+      _snack(
+        'SOS sent to $count emergency contact(s)',
+        SosColors.of(context).green,
       );
     } catch (e) {
       if (!mounted) return;
-
-      final errorColors = SosColors.of(context);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString().replaceFirst(
-              'Exception: ',
-              '',
-            ),
-          ),
-          backgroundColor: errorColors.red,
-        ),
-      );
-    } finally {
-      if (!mounted) return;
-
-      setState(() {
-        _sending = false;
-      });
+      _snack(e.toString(), SosColors.of(context).red);
     }
+
+    if (mounted) setState(() => _sending = false);
   }
 
   @override
@@ -161,15 +118,10 @@ class _ShareEmailState extends State<ShareEmail> {
         borderRadius: BorderRadius.circular(16),
         onTap: _sending ? null : _onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
-            vertical: 16,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: c.cardBorder,
-            ),
+            border: Border.all(color: c.cardBorder),
           ),
           child: Row(
             children: [
@@ -188,17 +140,12 @@ class _ShareEmailState extends State<ShareEmail> {
                           color: c.blue,
                         ),
                       )
-                    : Icon(
-                        Icons.email_outlined,
-                        color: c.blue,
-                        size: 22,
-                      ),
+                    : Icon(Icons.email_outlined, color: c.blue, size: 22),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'ALERT EMERGENCY CONTACTS',
@@ -212,19 +159,12 @@ class _ShareEmailState extends State<ShareEmail> {
                     const SizedBox(height: 2),
                     Text(
                       'Email your live location to saved contacts',
-                      style: TextStyle(
-                        color: c.textSecondary,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: c.textSecondary, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.chevron_right,
-                color: c.textSecondary,
-                size: 26,
-              ),
+              Icon(Icons.chevron_right, color: c.textSecondary, size: 26),
             ],
           ),
         ),
