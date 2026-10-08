@@ -4,6 +4,7 @@ import 'package:safeyatra/pages/profile/change_password_page.dart';
 import 'package:safeyatra/pages/profile/add_sos_email.dart';
 import 'package:safeyatra/pages/profile/contact_us_page.dart';
 import 'package:safeyatra/pages/profile/theme_sheet.dart';
+import 'package:safeyatra/pages/profile/update_profile_sheet.dart';
 import 'package:safeyatra/services/profile_pic.dart';
 import 'package:safeyatra/widgets/profile_card.dart';
 
