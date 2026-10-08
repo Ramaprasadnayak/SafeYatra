@@ -18,7 +18,7 @@ class SpeakTranslate extends StatefulWidget {
 }
 
 class _SpeakTranslateState extends State<SpeakTranslate> {
-  static const String _startSoundAsset = "audio/mic_start.mp3";
+  static const String _startSoundAsset = "assets/audio/button.mp3";
 
   final stt.SpeechToText _speech = stt.SpeechToText();
   final AudioPlayer _player = AudioPlayer();
