@@ -150,3 +150,28 @@ class EmailService {
     }
   }
 }
+
+class SosEmailService {
+  const SosEmailService();
+
+  Future<List<String>> getEmails() => EmailService.getEmails();
+
+  Future<void> addEmail(String email) => EmailService.addEmail(email);
+
+  Future<void> deleteEmail(String email) => EmailService.deleteEmail(email);
+
+  Future<int> triggerSos({
+    required String locality,
+    required String district,
+    required String coordinates,
+    double? latitude,
+    double? longitude,
+  }) =>
+      EmailService.sendSosAlert(
+        locality: locality,
+        district: district,
+        coordinates: coordinates,
+        latitude: latitude,
+        longitude: longitude,
+      );
+}

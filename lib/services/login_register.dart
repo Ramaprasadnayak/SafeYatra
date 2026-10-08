@@ -8,12 +8,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> login(String email, String password, BuildContext context) async {
   try {
-    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    final userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
     final user = userCredential.user;
     if (user == null) {
       _showError(context, "Login failed. Please try again.");
       return;
     }
+    final token = await user.getIdToken();
+    print("====================================");
+    print("FIREBASE UID:");
+    print(user.uid);
+    print("====================================");
+    print("FIREBASE ID TOKEN:");
+    print(token);
+    print("====================================");
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("uid", user.uid);
     if (!context.mounted) return;
@@ -72,19 +81,26 @@ void _showError(BuildContext context, String message) {
   ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
 }
 
-Future<bool> register(String username,String email,String password,BuildContext context) async {
+Future<bool> register(
+  String username,
+  String email,
+  String password,
+  BuildContext context,
+) async {
   try {
     final apiUrl = dotenv.env["apiUrl"];
     if (apiUrl == null || apiUrl.isEmpty) {
       _showError(context, "Configuration error. Please contact support.");
       return false;
     }
-    final usrRes = await http.get(
+    final usrRes = await http
+        .get(
           Uri.parse(
             "https://$apiUrl/auth/verifyusr/${Uri.encodeComponent(username)}",
           ),
           headers: {"Content-Type": "application/json"},
-        ).timeout(
+        )
+        .timeout(
           const Duration(seconds: 15),
           onTimeout: () =>
               throw Exception("Request timeout. Please check your connection."),
@@ -101,7 +117,8 @@ Future<bool> register(String username,String email,String password,BuildContext 
       _showError(context, "Username already exists");
       return false;
     }
-    final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    final UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
     final user = userCredential.user;
     if (user == null) {
       _showError(context, "Registration failed. Please try again.");
@@ -119,7 +136,8 @@ Future<bool> register(String username,String email,String password,BuildContext 
             "username": username,
             "email": user.email,
           }),
-        ).timeout(
+        )
+        .timeout(
           const Duration(seconds: 15),
           onTimeout: () =>
               throw Exception("Request timeout. Please check your connection."),
@@ -155,6 +173,7 @@ Future<bool> register(String username,String email,String password,BuildContext 
     return false;
   }
 }
+
 Future<bool> verifyuser(String username, BuildContext context) async {
   try {
     String? apiUrl = dotenv.env["apiUrl"];
@@ -168,11 +187,13 @@ Future<bool> verifyuser(String username, BuildContext context) async {
       );
       return false;
     }
-    final response = await http.post(
+    final response = await http
+        .post(
           Uri.parse("https://$apiUrl/auth/verifyuser"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({"username": username}),
-        ).timeout(
+        )
+        .timeout(
           const Duration(seconds: 10),
           onTimeout: () {
             throw Exception("Request timeout");
