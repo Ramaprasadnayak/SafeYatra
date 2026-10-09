@@ -26,14 +26,17 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
 
   Timer? _pollTimer;
   Timer? _cooldownTimer;
+  Timer? _verifyCooldownTimer;
 
   bool _isLoading = true;
   bool _isChecking = false;
+  bool _checkInFlight = false;
   bool _isLeaving = false;
   bool _isCompletingRegistration = false;
   bool _registrationCompleted = false;
 
   int _cooldown = 0;
+  int _verifyCooldown = 0;
 
   @override
   void initState() {
@@ -50,8 +53,10 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _pollTimer?.cancel();
     _cooldownTimer?.cancel();
+    _verifyCooldownTimer?.cancel();
     super.dispose();
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed &&
@@ -61,17 +66,20 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
       _checkVerified(silent: true);
     }
   }
+
   void _snack(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _stopTimers() {
     _pollTimer?.cancel();
     _cooldownTimer?.cancel();
+    _verifyCooldownTimer?.cancel();
   }
+
   Future<void> _registerAndSend() async {
     try {
       final success = await register(
@@ -156,11 +164,40 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _checkVerified({bool silent = false}) async {
-    if (_isChecking || _isCompletingRegistration || _isLeaving) return;
+  void _startVerifyCooldown([int seconds = 5]) {
+    _verifyCooldownTimer?.cancel();
 
-    if (!silent && mounted) {
-      setState(() => _isChecking = true);
+    if (!mounted) return;
+
+    setState(() => _verifyCooldown = seconds);
+
+    _verifyCooldownTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+
+        if (_verifyCooldown <= 1) {
+          timer.cancel();
+          setState(() => _verifyCooldown = 0);
+        } else {
+          setState(() => _verifyCooldown--);
+        }
+      },
+    );
+  }
+
+  Future<void> _checkVerified({bool silent = false}) async {
+    if (_checkInFlight || _isCompletingRegistration || _isLeaving) return;
+    if (!silent && _verifyCooldown > 0) return;
+
+    _checkInFlight = true;
+
+    if (!silent) {
+      _startVerifyCooldown();
+      if (mounted) setState(() => _isChecking = true);
     }
 
     try {
@@ -196,6 +233,7 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
       }
       debugPrint('Verification check error: $e');
     } finally {
+      _checkInFlight = false;
       if (mounted && !silent) {
         setState(() => _isChecking = false);
       }
@@ -241,10 +279,6 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Verified -> save to MongoDB
-  // ---------------------------------------------------------------------------
-
   Future<void> _onVerified() async {
     if (!mounted || _isCompletingRegistration || _registrationCompleted) {
       return;
@@ -254,11 +288,14 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
     _stopTimers();
 
     if (mounted) {
-      setState(() => _isChecking = false);
+      setState(() {
+        _isChecking = false;
+        _verifyCooldown = 0;
+        _cooldown = 0;
+      });
     }
 
     try {
-      // Confirm verification again before saving to MongoDB.
       await _auth.currentUser?.reload();
 
       if (!mounted) return;
@@ -271,8 +308,6 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
         return;
       }
 
-      // Save user details to MongoDB only after verification.
-      // The backend must verify the Firebase token AND its email_verified claim.
       final success = await completeRegistration();
 
       if (!mounted) return;
@@ -282,7 +317,6 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
           'Email verified, but account registration failed. '
           'Tap "I have verified" to retry.',
         );
-        // Keep the Firebase account; just let the user retry the backend call.
         return;
       }
 
@@ -319,7 +353,20 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
   }
 
   Future<void> _handleBack() async {
-    if (_isLeaving || _isCompletingRegistration) return;
+    if (_isLeaving || _isCompletingRegistration || _checkInFlight) return;
+
+    try {
+      await _auth.currentUser?.reload();
+    } catch (e) {
+      debugPrint('Reload on back error: $e');
+    }
+
+    if (!mounted) return;
+
+    if (_auth.currentUser?.emailVerified ?? false) {
+      await _onVerified();
+      return;
+    }
 
     setState(() => _isLeaving = true);
     _stopTimers();
@@ -415,8 +462,12 @@ class _EmailPageState extends State<EmailPage> with WidgetsBindingObserver {
                               : Button(
                                   height: 56,
                                   width: fieldWidth,
-                                  text: 'I have verified',
-                                  onpressed: () => _checkVerified(),
+                                  text: _verifyCooldown > 0
+                                      ? 'Check again in ${_verifyCooldown}s'
+                                      : 'I have verified',
+                                  onpressed: _verifyCooldown > 0
+                                      ? () {}
+                                      : () => _checkVerified(),
                                 ),
                         ),
                         const SizedBox(height: 12),
