@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safeyatra/pages/sos/call_logic.dart';
 import 'package:safeyatra/pages/sos/share_email.dart';
 import 'package:safeyatra/pages/sos/sos_alert_banner.dart';
 import 'package:safeyatra/pages/sos/sos_call_button.dart';
@@ -134,7 +135,7 @@ class SosPage extends StatefulWidget {
   final String locality;
   final String district;
   final String coordinates;
-  final double? latitude,longitude;
+  final double? latitude, longitude;
 
   const SosPage({
     super.key,
@@ -143,8 +144,8 @@ class SosPage extends StatefulWidget {
     this.locality = "Koramangala",
     this.district = "Bengaluru Urban District, Karnataka",
     this.coordinates = "13.0123° N, 77.6245° E",
-    this.latitude=13.0123,
-    this.longitude=77.6245
+    this.latitude = 13.0123,
+    this.longitude = 77.6245,
   });
 
   @override
@@ -190,7 +191,11 @@ class _SosPageState extends State<SosPage> {
               activatedAtLabel: _formattedTime,
             ),
             const SizedBox(height: 16),
-            SosCallButton(onTap: widget.onCallEmergency ?? () {}),
+            SosCallButton(
+              onTap: () async {
+                await confirmAndCall112(context);
+              },
+            ),
             const SizedBox(height: 16),
             const SizedBox(height: 16),
             const SosInfoBanner(text: "Stay calm. Help is on the way."),

@@ -58,14 +58,6 @@ Future<void> login(String email, String password, BuildContext context) async {
       _showError(context, "Login failed. Please try again.");
       return;
     }
-    final token = await user.getIdToken();
-    print("====================================");
-    print("FIREBASE UID:");
-    print(user.uid);
-    print("====================================");
-    print("FIREBASE ID TOKEN:");
-    print(token);
-    print("====================================");
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("uid", user.uid);
     if (!context.mounted) return;
