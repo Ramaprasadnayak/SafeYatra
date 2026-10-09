@@ -113,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 100),
@@ -124,42 +125,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              MyTextField( 
-                hintText: "Choose a Username",
-                height: 56,
-                width: 380,
-                prefixicon: Icon(Icons.person_outline),
-                controller: usrname,
-                eyebutton: false,
-                hideText: false,
+              Center(
+                child: MyTextField( 
+                  hintText: "Choose a Username",
+                  height: 56,
+                  width: 380,
+                  prefixicon: Icon(Icons.person_outline),
+                  controller: usrname,
+                  eyebutton: false,
+                  hideText: false,
+                ),
               ),
               const SizedBox(height: 20),
-              MyTextField(
-                hintText: "Choose a email",
-                height: 56,
-                width: 380,
-                prefixicon: Icon(Icons.email_outlined),
-                controller: email,
-                eyebutton: false,
-                hideText: false,
+              Center(
+                child: MyTextField(
+                  hintText: "Choose a email",
+                  height: 56,
+                  width: 380,
+                  prefixicon: Icon(Icons.email_outlined),
+                  controller: email,
+                  eyebutton: false,
+                  hideText: false,
+                ),
               ),
               const SizedBox(height: 20),
-              MyTextField(
-                hintText: "Create Strong Password",
-                height: 56,
-                width: 380,
-                prefixicon: Icon(Icons.lock_outline),
-                controller: password,
-                eyebutton: true,
-                hideText: true,
+              Center(
+                child: MyTextField(
+                  hintText: "Create Strong Password",
+                  height: 56,
+                  width: 380,
+                  prefixicon: Icon(Icons.lock_outline),
+                  controller: password,
+                  eyebutton: true,
+                  hideText: true,
+                ),
               ),
               const SizedBox(height: 18),
               const SizedBox(height: 40),
-              Button(
-                height: 56,
-                width: 380,
-                text: "Register",
-                onpressed: ()=>validateInput(),
+              Center(
+                child: Button(
+                  height: 56,
+                  width: 380,
+                  text: "Register",
+                  onpressed: ()=>validateInput(),
+                ),
               ),
               const SizedBox(height: 18),
               RichText(

@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safeyatra/pages/auth/register_page.dart';
-// import 'package:safeyatra/features/home_screen.dart';
 import 'package:safeyatra/services/login_register.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 import 'package:safeyatra/widgets/text_field.dart';
@@ -16,6 +15,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    startapp(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       login(trimmedEmail, trimmedPassword, context);
     }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -87,29 +92,33 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child:Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 100),
-                Text(
-                  "Login to your account",
-                  style: GoogleFonts.poppins(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              Text(
+                "Login to your account",
+                style: GoogleFonts.poppins(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(height: 30),
-                MyTextField(
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: MyTextField(
                   hintText: "Enter Email",
                   height: 56,
                   width: 380,
                   prefixicon: Icon(Icons.person_outline),
                   controller: email,
-                  eyebutton: false, 
+                  eyebutton: false,
                   hideText: false,
                 ),
-                const SizedBox(height: 20),
-                MyTextField(
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: MyTextField(
                   hintText: "Enter Password",
                   height: 56,
                   width: 380,
@@ -118,62 +127,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   eyebutton: true,
                   hideText: true,
                 ),
-                const SizedBox(height: 18),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     Text(
-                //       "Forgot password?",
-                //       style: GoogleFonts.poppins(
-                //         fontSize: 16,
-                //         fontWeight: FontWeight.w600,
-                //         color: const Color(0xFF1D6FB8),
-                //       ),
-                //     ),
-                //     SizedBox(width: 10),
-                //   ],  
-                // ),
-                const SizedBox(height: 40),
-                Button(
-                  height: 56, 
-                  width: 380, 
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: Button(
+                  height: 56,
+                  width: 380,
                   text: "Login",
-                  onpressed: ()=>validateInput()
+                  onpressed: () => validateInput(),
                 ),
-                const SizedBox(height: 18),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Don't have an account? ",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).textTheme.bodyMedium?.color,
-                        ),
+              ),
+              const SizedBox(height: 18),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Don't have an account? ",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
-                      TextSpan(
-                        text: "Register Now",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF1D6FB8),
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(),
-                              ),
-                            );
-                          },
+                    ),
+                    TextSpan(
+                      text: "Register Now",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF1D6FB8),
                       ),
-                    ],
-                  ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ),
       ),
     );

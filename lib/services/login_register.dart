@@ -6,6 +6,49 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<bool> startapp(BuildContext context) async {
+  try {
+    final apiUrl = dotenv.env["apiUrl"];
+
+    if (apiUrl == null || apiUrl.isEmpty) {
+      if (context.mounted) {
+        _showError(
+          context,
+          "Configuration error. Please contact support.",
+        );
+      }
+      return false;
+    }
+
+    final baseUrl = apiUrl.startsWith("http")
+        ? apiUrl
+        : "https://$apiUrl";
+
+    final response = await http
+        .get(
+          Uri.parse("$baseUrl/"),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        )
+        .timeout(const Duration(seconds: 60));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (data["message"] == "SafeYatra API is running") {
+        debugPrint("SafeYatra backend is ready!");
+        return true;
+      }
+    }
+
+    debugPrint("Backend response: ${response.statusCode}");
+    return false;
+  } catch (e) {
+    debugPrint("Backend startup check failed: $e");
+    return false;
+  }
+}
 Future<void> login(String email, String password, BuildContext context) async {
   try {
     final userCredential = await FirebaseAuth.instance

@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
         'Change Theme',
         () => showThemeSheet(context),
       ),
-      _ProfileOption(
+      _ProfileOption( 
         Icons.phone_android_rounded,
         'Add SOS Email',
         () => _open(const AddSosEmailPage()),
