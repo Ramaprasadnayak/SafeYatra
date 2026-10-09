@@ -124,67 +124,62 @@ Future<bool> register(
 ) async {
   try {
     final apiUrl = dotenv.env["apiUrl"];
+
     if (apiUrl == null || apiUrl.isEmpty) {
-      _showError(context, "Configuration error. Please contact support.");
+      _showError(
+        context,
+        "Configuration error. Please contact support.",
+      );
       return false;
     }
     final usrRes = await http
         .get(
           Uri.parse(
-            "https://$apiUrl/auth/verifyusr/${Uri.encodeComponent(username)}",
+            "https://$apiUrl/auth/verifyusr/"
+            "${Uri.encodeComponent(username)}",
           ),
           headers: {"Content-Type": "application/json"},
         )
-        .timeout(
-          const Duration(seconds: 15),
-          onTimeout: () =>
-              throw Exception("Request timeout. Please check your connection."),
-        );
+        .timeout(const Duration(seconds: 15));
+
     if (usrRes.statusCode != 200) {
-      _showError(
-        context,
-        "Unable to verify username. Server error: ${usrRes.statusCode}",
-      );
+      _showError(context, "Unable to verify username.");
       return false;
     }
+
     final usrData = jsonDecode(usrRes.body);
+
     if (usrData["exists"] == true) {
       _showError(context, "Username already exists");
       return false;
     }
-    final UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password);
-    final user = userCredential.user;
+
+    // 2. Create Firebase account
+    final credential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = credential.user;
+
     if (user == null) {
       _showError(context, "Registration failed. Please try again.");
       return false;
     }
+
+    // 3. Save username in Firebase profile
     await user.updateDisplayName(username);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("uid", user.uid);
-    final response = await http
-        .post(
-          Uri.parse("https://$apiUrl/auth/register"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode({
-            "firebaseid": user.uid,
-            "username": username,
-            "email": user.email,
-          }),
-        )
-        .timeout(
-          const Duration(seconds: 15),
-          onTimeout: () =>
-              throw Exception("Request timeout. Please check your connection."),
-        );
-    final data = jsonDecode(response.body);
-    if (response.statusCode == 200 && data["message"] == "User registered") {
-      return true;
-    }
-    _showError(context, data["message"] ?? "Registration failed");
-    return false;
+
+    // 4. Send verification email
+    await user.sendEmailVerification();
+
+    // Do NOT register in MongoDB here.
+    // MongoDB registration happens only after verification.
+    return true;
   } on FirebaseAuthException catch (e) {
     String errorMessage;
+
     switch (e.code) {
       case 'email-already-in-use':
         errorMessage = "This email is already registered.";
@@ -201,14 +196,14 @@ Future<bool> register(
       default:
         errorMessage = e.message ?? "Authentication error occurred.";
     }
+
     _showError(context, errorMessage);
     return false;
-  } on Exception catch (e) {
-    _showError(context, "Error: ${e.toString()}");
+  } catch (e) {
+    _showError(context, "Registration failed: $e");
     return false;
   }
 }
-
 Future<bool> verifyuser(String username, BuildContext context) async {
   try {
     String? apiUrl = dotenv.env["apiUrl"];
@@ -247,6 +242,60 @@ Future<bool> verifyuser(String username, BuildContext context) async {
         backgroundColor: Colors.red,
       ),
     );
+    return false;
+  }
+}
+Future<bool> completeRegistration() async {
+  try {
+    final apiUrl = dotenv.env["apiUrl"];
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (apiUrl == null || apiUrl.isEmpty || user == null) {
+      return false;
+    }
+
+    await user.reload();
+
+    final verifiedUser = FirebaseAuth.instance.currentUser;
+
+    if (verifiedUser == null || !verifiedUser.emailVerified) {
+      return false;
+    }
+
+    final idToken = await verifiedUser.getIdToken(true);
+
+    final response = await http
+        .post(
+          Uri.parse(
+            "${apiUrl.startsWith("http") ? apiUrl : "https://$apiUrl"}/auth/register",
+          ),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $idToken",
+          },
+          body: jsonEncode({
+            "firebaseid": verifiedUser.uid,
+            "username": verifiedUser.displayName,
+            "email": verifiedUser.email,
+          }),
+        )
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      debugPrint("Registration failed: ${response.body}");
+      return false;
+    }
+
+    final data = jsonDecode(response.body);
+    if (data["message"] == "User registered") {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("uid", verifiedUser.uid);
+      return true;
+    }
+
+    return false;
+  } catch (e) {
+    debugPrint("Complete registration error: $e");
     return false;
   }
 }

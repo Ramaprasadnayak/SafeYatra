@@ -18,15 +18,18 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode: themeProvider.themeMode,
       home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: FirebaseAuth.instance.userChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
           }
-          if (snapshot.hasData) {
-            return HomeScreen();
+          final user = snapshot.data;
+          if (user != null && user.emailVerified) {
+            return const HomeScreen();
           }
-          return LoginScreen();
+          return const LoginScreen();
         },
       ),
     );
