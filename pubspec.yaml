@@ -24,9 +24,9 @@ dependencies:
   geocoding: ^5.0.0
   connectivity_plus: ^7.3.1
   http: ^1.6.0
-  firebase_core: ^4.13.0
+  firebase_core: ^4.15.0
   url_launcher: ^6.3.2
-  firebase_auth: ^6.5.7
+  firebase_auth: ^6.7.0
   syncfusion_flutter_gauges: ^34.2.4
 
 dev_dependencies:
