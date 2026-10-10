@@ -55,16 +55,13 @@ Future<Map<String, dynamic>?> getUserInfo(BuildContext context) async {
     }
 
     final data = jsonDecode(response.body);
-    if (data is Map &&
-        data["message"] == "retrieved info" &&
-        data["info"] is Map) {
+    if (data is Map && data["message"] == "retrieved info" && data["info"] is Map) {
       return Map<String, dynamic>.from(data["info"] as Map);
     }
 
     return null;
   } catch (e) {
     if (!context.mounted) return null;
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Unable to retrieve user information."),
