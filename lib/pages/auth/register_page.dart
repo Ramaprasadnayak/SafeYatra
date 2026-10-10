@@ -5,7 +5,6 @@ import 'package:safeyatra/pages/auth/email_verification.dart';
 import 'package:safeyatra/widgets/buttons.dart';
 import 'package:safeyatra/widgets/text_field.dart';
 
-
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
   @override
@@ -25,7 +24,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final trimmedEmail = email.text.trim();
       final trimmedPassword = password.text.trim();
 
-      if (trimmedUsername.isEmpty || trimmedEmail.isEmpty || trimmedPassword.isEmpty) {
+      if (trimmedUsername.isEmpty ||
+          trimmedEmail.isEmpty ||
+          trimmedPassword.isEmpty) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -48,7 +49,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         return;
       }
+      if (trimmedUsername.length > 12) {
+        if (!context.mounted) return;
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Username must not exceed 12 characters"),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       if (!emailRegex.hasMatch(trimmedEmail)) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -72,12 +84,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         return;
       }
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailPage(
-        usrname: trimmedUsername, 
-        email: trimmedEmail, 
-        password: trimmedPassword
-      )));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmailPage(
+            usrname: trimmedUsername,
+            email: trimmedEmail,
+            password: trimmedPassword,
+          ),
+        ),
+      );
     }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -126,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 30),
               Center(
-                child: MyTextField( 
+                child: MyTextField(
                   hintText: "Choose a Username",
                   height: 56,
                   width: 380,
@@ -167,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 56,
                   width: 380,
                   text: "Register",
-                  onpressed: ()=>validateInput(),
+                  onpressed: () => validateInput(),
                 ),
               ),
               const SizedBox(height: 18),
