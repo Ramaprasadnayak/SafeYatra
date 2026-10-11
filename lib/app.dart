@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:safeyatra/pages/auth/login_page.dart';
 import 'package:safeyatra/pages/home_screen.dart';
 import 'package:safeyatra/providers/theme_provider.dart';
+import 'package:safeyatra/splash/splash_screen.dart';
 import 'package:safeyatra/themes/dark_theme.dart';
 import 'package:safeyatra/themes/light_theme.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -17,21 +19,30 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeProvider.themeMode,
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.userChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          final user = snapshot.data;
-          if (user != null && user.emailVerified) {
-            return const HomeScreen();
-          }
-          return const LoginScreen();
-        },
-      ),
+      home: const SplashScreen(nextScreen: AuthGate()),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.userChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final user = snapshot.data;
+        if (user != null && user.emailVerified) {
+          return const HomeScreen();
+        }
+        return const LoginScreen();
+      },
     );
   }
 }

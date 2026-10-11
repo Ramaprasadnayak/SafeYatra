@@ -28,12 +28,19 @@ dependencies:
   url_launcher: ^6.3.2
   firebase_auth: ^6.7.0
   syncfusion_flutter_gauges: ^34.2.4
+  lottie: ^3.6.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.0
   flutter_launcher_icons: ^0.14.4
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  android_12:
+    color: "#FFFFFF"
 
 flutter:
   uses-material-design: true
@@ -41,6 +48,7 @@ flutter:
     - .env
     - assets/logo/icon.png
     - assets/audio/button.mp3
+    - assets/animations/safeyatra.json
 
 flutter_launcher_icons:
   android: true
