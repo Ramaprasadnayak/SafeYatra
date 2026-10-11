@@ -49,6 +49,7 @@ flutter:
     - assets/logo/icon.png
     - assets/audio/button.mp3
     - assets/animations/safeyatra.json
+    - assets/animations/email_animation.json
 
 flutter_launcher_icons:
   android: true

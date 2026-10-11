@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:safeyatra/services/email_service.dart';
 import './sos_page.dart' show SosColors;
+import 'package:provider/provider.dart';
+import 'package:safeyatra/providers/sos_animation_provider.dart';
 
 class ShareEmail extends StatefulWidget {
   final String locality;
@@ -63,7 +65,10 @@ class _ShareEmailState extends State<ShareEmail> {
             onPressed: () => Navigator.of(ctx).pop(true),
             child: const Text(
               'Send',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -71,21 +76,16 @@ class _ShareEmailState extends State<ShareEmail> {
     );
     return result == true;
   }
-
   void _snack(String message, Color color) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message), backgroundColor: color));
   }
-
   Future<void> _onTap() async {
     if (_sending) return;
-
     final confirmed = await _confirm();
     if (!mounted || !confirmed) return;
-
     setState(() => _sending = true);
-
     try {
       final count = await EmailService.sendSosAlert(
         locality: widget.locality,
@@ -95,6 +95,7 @@ class _ShareEmailState extends State<ShareEmail> {
         longitude: widget.longitude,
       );
       if (!mounted) return;
+      context.read<SosAnimationProvider>().start(); 
       _snack(
         'SOS sent to $count emergency contact(s)',
         SosColors.of(context).green,
