@@ -1,12 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safeyatra/pages/profile/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _loginRoute = '/login'; // change to your login route
 
+Future<void> clearUserPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('safety_label');
+  await prefs.remove('usrname');
+  await prefs.remove('city');
+  await prefs.remove('state');
+  await prefs.remove('nation');
+  await prefs.remove('district');
+  await prefs.remove('districtSyncedCity');
+  await prefs.remove('uid');
+}
+
 void _goToLogin(BuildContext context) {
-  Navigator.of(context, rootNavigator: true)
-      .pushNamedAndRemoveUntil(_loginRoute, (route) => false);
+  Navigator.of(
+    context,
+    rootNavigator: true,
+  ).pushNamedAndRemoveUntil(_loginRoute, (route) => false);
 }
 
 Future<void> confirmLogout(BuildContext context) async {
@@ -27,11 +42,21 @@ Future<void> confirmLogout(BuildContext context) async {
       ],
     ),
   );
+
   if (ok != true) return;
 
-  await AuthService.instance.signOut();
-  if (!context.mounted) return;
-  _goToLogin(context);
+  try {
+    await AuthService.instance.signOut();
+    await clearUserPreferences();
+    if (!context.mounted) return;
+    _goToLogin(context);
+  } catch (e) {
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Logout failed: $e')));
+  }
 }
 
 Future<void> confirmDeleteAccount(BuildContext context) async {
@@ -43,13 +68,20 @@ Future<void> confirmDeleteAccount(BuildContext context) async {
 
   try {
     await AuthService.instance.deleteAccount(password);
+    await clearUserPreferences();
     if (!context.mounted) return;
     _goToLogin(context);
   } on FirebaseAuthException catch (e) {
     if (!context.mounted) return;
     final wrong = e.code == 'wrong-password' || e.code == 'invalid-credential';
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(wrong ? 'Incorrect password' : (e.message ?? 'Could not delete account'))),
+      SnackBar(
+        content: Text(
+          wrong
+              ? 'Incorrect password'
+              : (e.message ?? 'Could not delete account'),
+        ),
+      ),
     );
   }
 }

@@ -56,7 +56,7 @@ class AuthService {
   }
 
   Future<void> deleteAccount(String password) async {
-    await reauthenticate(password);
+    await reauthenticate(password); 
     await _auth.currentUser!.delete();
   }
 

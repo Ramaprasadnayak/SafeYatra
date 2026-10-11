@@ -10,7 +10,6 @@ import 'package:safeyatra/themes/light_theme.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -26,19 +25,19 @@ class MyApp extends StatelessWidget {
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.userChanges(),
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
-        final user = snapshot.data;
-        if (user != null && user.emailVerified) {
+        if (snapshot.hasData) {
           return const HomeScreen();
         }
         return const LoginScreen();

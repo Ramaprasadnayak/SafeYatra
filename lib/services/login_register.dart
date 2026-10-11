@@ -58,9 +58,6 @@ Future<void> login(String email, String password, BuildContext context) async {
       _showError(context, "Login failed. Please try again.");
       return;
     }
-    
-    final String? token = await user.getIdToken();
-    debugPrint("🔥 Firebase ID Token: $token");
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("uid", user.uid);
