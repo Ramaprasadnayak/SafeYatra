@@ -7,13 +7,7 @@ const _loginRoute = '/login'; // change to your login route
 
 Future<void> clearUserPreferences() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('safety_label');
   await prefs.remove('usrname');
-  await prefs.remove('city');
-  await prefs.remove('state');
-  await prefs.remove('nation');
-  await prefs.remove('district');
-  await prefs.remove('districtSyncedCity');
   await prefs.remove('uid');
 }
 
